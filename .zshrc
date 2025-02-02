@@ -83,3 +83,5 @@ fi
 
 # aichat alias
 alias ai='aichat --session temp'
+
+alias lg="lazygit"
