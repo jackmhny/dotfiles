@@ -35,6 +35,7 @@ zstyle ':completion:*' menu select
 
 # Vi Mode Configuration
 set -o vi
+KEYTIMEOUT=1
 
 autoload -Uz edit-command-line
 zle -N edit-command-line
@@ -60,6 +61,10 @@ alias lh='ls -lh'
 alias lt='ls -ltr'
 alias lS='ls -lSr'
 
+# Vim aliases
+alias vi='nvim'
+alias vim='nvim'
+
 # Shell-GPT Integration
 _sgpt_zsh() {
     if [[ -n "$BUFFER" ]]; then
@@ -84,4 +89,23 @@ fi
 # aichat alias
 alias ai='aichat --session temp'
 
+# aider alias
+alias aider1='aider --architect --model r1 --editor-model sonnet'
+
 alias lg="lazygit"
+
+alias fzvim='fzf \
+    --preview "command -v bat >/dev/null 2>&1 \
+        && bat --color=always -n {} \
+        || cat {}" \
+    --bind "enter:execute(nvim {})"'
+
+# Fuzzy directory navigation
+fcd() {
+    local dir
+    dir=$(find ${1:-.} -type d -not -path '*/\.*' 2> /dev/null | fzf +m) && cd "$dir"
+}
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
