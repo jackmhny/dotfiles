@@ -3,19 +3,19 @@
 size = 12
 
 [font.bold]
-family = "IosevkaTerm Nerd Font"
+family = "IosevkaTerm Nerd Font Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "IosevkaTerm Nerd Font"
+family = "IosevkaTerm Nerd Font Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "IosevkaTerm Nerd Font"
+family = "IosevkaTerm Nerd Font Mono"
 style = "Italic"
 
 [font.normal]
-family = "IosevkaTerm Nerd Font"
+family = "IosevkaTerm Nerd Font Mono"
 style = "Regular"
 
 # -----------------------------------------------------------------------------
