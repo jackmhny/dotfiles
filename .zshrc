@@ -76,7 +76,7 @@ _sgpt_zsh() {
     fi
 }
 zle -N _sgpt_zsh
-bindkey '^[l' _sgpt_zsh  # Alt+L to trigger shell-gpt suggestions
+bindkey '^[o' _sgpt_zsh  # Alt+L to trigger shell-gpt suggestions
 
 # Command Not Found Handler
 if [[ -x /usr/lib/command-not-found ]]; then
