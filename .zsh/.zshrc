@@ -25,7 +25,7 @@ eval "$(dircolors -b)"
 
 # Completion System
 # fpath=(~/.zsh/completions $fpath)
-# autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit
 
 # load compinit and rebind ^I (tab) to expand-or-complete, then compile
 # completions as bytecode if needed.
@@ -160,5 +160,5 @@ done
 
 # end nvm lazy load
 
-eval "$(uv generate-shell-completion zsh)"
-eval "$(uvx --generate-shell-completion zsh)"
+# eval "$(uv generate-shell-completion zsh)"
+# eval "$(uvx --generate-shell-completion zsh)"
