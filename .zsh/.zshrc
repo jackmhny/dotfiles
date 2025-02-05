@@ -73,7 +73,7 @@ export PATH=$PATH:$HOME/.local/bin
 
 # Source External Configurations
 eval "$(starship init zsh)"
-. "$HOME/.cargo/env"
+. "$HOME/.cargo/env" 2>/dev/null || true
 [[ -f ~/.env ]] && source ~/.env
 
 # Aliases
