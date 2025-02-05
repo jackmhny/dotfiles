@@ -24,8 +24,31 @@ export CLICOLOR=1
 eval "$(dircolors -b)"
 
 # Completion System
-fpath=(~/.zsh/completions ~/.zsh/zsh-completions/src $fpath)
-autoload -Uz compinit && compinit
+# fpath=(~/.zsh/completions $fpath)
+# autoload -Uz compinit && compinit
+
+# load compinit and rebind ^I (tab) to expand-or-complete, then compile
+# completions as bytecode if needed.
+lazyload-compinit() {
+  autoload -Uz compinit
+  # compinit will automatically cache completions to ~/.zcompdump
+  compinit
+  bindkey "^I" expand-or-complete
+  {
+    zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
+    # if zcompdump file exists, and we don't have a compiled version or the
+    # dump file is newer than the compiled file, update the bytecode.
+    if [[ -s "$zcompdump" && (! -s "${zcompdump}.zwc" || "$zcompdump" -nt "${zcompdump}.zwc") ]]; then
+      zcompile "$zcompdump"
+    fi
+  } &!
+  # pretend we called this directly, instead of the lazy loader
+  zle expand-or-complete
+}
+# mark the function as a zle widget
+zle -N lazyload-compinit
+bindkey "^I" lazyload-compinit
+
 
 zstyle ':completion:*' completer _expand _complete _ignored
 zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}'
@@ -45,6 +68,7 @@ bindkey -M vicmd v edit-command-line
 # Environment Variables
 export EDITOR=nvim
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+export PATH=$PATH:$HOME/.local/share/bob/nvim-bin
 export PATH=$PATH:$HOME/.local/bin
 
 # Source External Configurations
@@ -106,8 +130,35 @@ fcd() {
     dir=$(find ${1:-.} -type d -not -path '*/\.*' 2> /dev/null | fzf +m) && cd "$dir"
 }
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Create wrappers around common nvm consumers.
+# nvm, node, yarn and npm will load nvm.sh on their first invocation,
+# posing no start up time penalty for the shells that aren't going to use them at all.
+# There is only single time penalty for one shell.
+
+typeset -ga __lazyLoadLabels=(nvm node npm npx pnpm yarn pnpx bun bunx)
+
+__load-nvm() {
+    export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+
+    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+}
+
+__work() {
+    for label in "${__lazyLoadLabels[@]}"; do
+        unset -f $label
+    done
+    unset -v __lazyLoadLabels
+
+    __load-nvm
+    unset -f __load-nvm __work
+}
+
+for label in "${__lazyLoadLabels[@]}"; do
+    eval "$label() { __work; $label \$@; }"
+done
+
+# end nvm lazy load
+
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
