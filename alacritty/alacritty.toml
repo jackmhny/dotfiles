@@ -1,3 +1,7 @@
+# Window configuration
+[window]
+dimensions = { columns = 120, lines = 30 }
+
 # Font configuration
 [font]
 size = 12
