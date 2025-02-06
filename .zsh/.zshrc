@@ -63,6 +63,14 @@ KEYTIMEOUT=1
 autoload -Uz edit-command-line
 zle -N edit-command-line
 
+# Custom vi-yank that also copies to Wayland clipboard
+function vi-yank-wl {
+    zle vi-yank
+    echo "$CUTBUFFER" | wl-copy
+}
+zle -N vi-yank-wl
+bindkey -M vicmd 'y' vi-yank-wl
+
 bindkey -M vicmd v edit-command-line
 
 # Environment Variables
