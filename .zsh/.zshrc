@@ -110,13 +110,39 @@ _sgpt_zsh() {
 zle -N _sgpt_zsh
 bindkey '^[o' _sgpt_zsh  # Alt+L to trigger shell-gpt suggestions
 
-# Command Not Found Handler
+# Command Not Found Handler for ubuntu
 if [[ -x /usr/lib/command-not-found ]]; then
     command_not_found_handler() {
         /usr/lib/command-not-found -- "$1"
         return $?
     }
 fi
+
+
+# Command Not Found handler for arch
+if [[ -f /etc/os-release && $(grep -c "ID=arch" /etc/os-release) -gt 0 ]]; then
+    command_not_found_handler() {
+        local cmd="$1"
+        shift
+
+  local pkg
+  pkg=$(pkgfile -b "$cmd" 2>/dev/null | head -n 1)
+
+  if [[ -n "$pkg" ]]; then
+      echo "Command '$cmd' not found. Install with: sudo pacman -S $pkg"
+  else
+      echo "Command '$cmd' not found."
+  fi
+
+  return 127
+      }
+  else
+      command_not_found_handler() {
+  echo "Command '$1' not found."
+  return 127
+      }
+  fi
+
 
 # aichat alias
 alias ai='aichat --session temp'
