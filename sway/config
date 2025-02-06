@@ -69,6 +69,9 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
     # Start your launcher
     bindsym $mod+d exec $menu
 
+    # Start Chrome/Chromium (tries unstable, stable, then chromium)
+    bindsym $mod+b exec which google-chrome-unstable >/dev/null && google-chrome-unstable || (which google-chrome >/dev/null && google-chrome || chromium)
+
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.
@@ -135,10 +138,10 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # Layout stuff:
 #
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
-    bindsym $mod+b splith
+    # split in horizontal orientation
+    bindsym $mod+z splith
+
+    # split in horizontal orientation
     bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
