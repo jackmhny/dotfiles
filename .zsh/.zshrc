@@ -198,3 +198,4 @@ done
 # eval "$(uvx --generate-shell-completion zsh)"
 alias fastfetch='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
 
+alias connect_airpods='bluetoothctl connect 80:95:3A:C6:40:2D'
