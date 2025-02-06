@@ -170,3 +170,5 @@ done
 
 # eval "$(uv generate-shell-completion zsh)"
 # eval "$(uvx --generate-shell-completion zsh)"
+alias fastfetch='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
+
