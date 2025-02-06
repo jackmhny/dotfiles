@@ -24,6 +24,7 @@ local buttons = {
     dashboard.button("SPC f f", "  Find File", ":Telescope find_files<CR>"),
     dashboard.button("SPC f r", "  Recent Files", ":Telescope oldfiles<CR>"),
     dashboard.button("SPC f g", "  Find Text", ":Telescope live_grep<CR>"),
+    dashboard.button("SPC f l", "󰐙 Restore Last Session", ":lua require('persistence').load({ last = true })<cr>"),
     dashboard.button("SPC c c", "  Configuration", ":e $HOME/.config/nvim<CR>"),
     dashboard.button("SPC c l", "  Lazy", ":Lazy<CR>"),
     dashboard.button("q", "  Quit", ":qa<CR>"),
