@@ -60,6 +60,9 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # Basics:
 #
+    # 1Password shortcuts
+    bindsym $mod+backslash exec 1password
+    bindsym $mod+Shift+bracketright exec 1password --quick-access
     # Start a terminal
     bindsym $mod+Return exec $term
 
