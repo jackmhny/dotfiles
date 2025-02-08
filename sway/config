@@ -5,6 +5,10 @@
 # Read `man 5 sway` for a complete reference.
 
 ### Variables
+
+# Gaps configuration
+gaps inner 8
+gaps outer 4
 #
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
@@ -160,6 +164,9 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
     # Move focus to the parent container
     bindsym $mod+a focus parent
+
+    # Move focus to the child container
+    bindsym $mod+Shift+a focus child
 #
 # Scratchpad:
 #
@@ -180,16 +187,16 @@ mode "resize" {
     # right will grow the containers width
     # up will shrink the containers height
     # down will grow the containers height
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
+    bindsym $left resize shrink width 50px
+    bindsym $down resize grow height 50px
+    bindsym $up resize shrink height 50px
+    bindsym $right resize grow width 50px
 
     # Ditto, with arrow keys
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
+    bindsym Left resize shrink width 50px
+    bindsym Down resize grow height 50px
+    bindsym Up resize shrink height 50px
+    bindsym Right resize grow width 50px
 
     # Return to default mode
     bindsym Return mode "default"
@@ -199,8 +206,10 @@ bindsym $mod+r mode "resize"
 #
 # Utilities:
 #
-    # Start gnome-keyring-daemon for secrets management
-    exec gnome-keyring-daemon --start --components=secrets
+    # Set XDG_CONFIG_HOME for the session
+    exec_always --no-startup-id env XDG_CONFIG_HOME="$HOME/.config"
+    # Start SSH agent component of gnome-keyring
+    exec /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
     # Special keys to adjust volume via PulseAudio
     bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
     bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
