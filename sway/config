@@ -6,6 +6,27 @@
 
 ### Variables
 
+# tokyonight moon blue
+
+# Window borders and title colors
+client.focused          #82aaff #82aaff #1b1d2b #86e1fc   #82aaff
+client.focused_inactive #444a73 #1b1d2b #82aaff #444a73   #444a73
+client.unfocused       #1b1d2b #1b1d2b #828bb8 #1b1d2b   #1b1d2b
+client.urgent          #ff757f #ff757f #c8d3f5 #ff757f   #ff757f
+client.placeholder     #1b1d2b #1b1d2b #828bb8 #1b1d2b   #1b1d2b
+
+# Title bar settings
+titlebar_border_thickness 1
+titlebar_padding 5 1
+# title_align center
+
+
+# Window borders
+default_border pixel 1
+# default_border normal
+default_floating_border pixel 1
+smart_borders on
+
 # Gaps configuration
 gaps inner 8
 gaps outer 4
@@ -25,7 +46,8 @@ set $menu wmenu-run
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+output * bg ~/Pictures/blue.jpg fill
 #
 # Example configuration:
 #
@@ -50,7 +72,7 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # Configure all touchpads
 input type:touchpad {
-    natural_scroll enabled
+    natural_scroll disabled
     tap enabled
 }
 
