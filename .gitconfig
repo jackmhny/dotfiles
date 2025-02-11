@@ -1,0 +1,15 @@
+[user]
+	email = jacksmahoney@gmail.com
+	name = Jack Mahoney (arch)
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[diff]
+	tool = nvimdiff
+[difftool "nvimdiff"]
+	path = nvim
+[difftool]
+	prompt = false
