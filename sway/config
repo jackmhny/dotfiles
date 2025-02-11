@@ -48,6 +48,7 @@ set $menu wmenu-run
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 output * bg ~/Pictures/blue.jpg fill
+
 #
 # Example configuration:
 #
@@ -88,6 +89,11 @@ input type:touchpad {
     bindsym $mod+Shift+bracketright exec 1password --quick-access
     # Start a terminal
     bindsym $mod+Return exec $term
+
+    # Quick screenshot via Grim and Slurp, Wofi
+bindsym $mod+Shift+g exec zsh -c 'filename=$(wofi -d --allow-empty --lines 1 --prompt "Enter the screenshot name:"); slurp | grim -g - ~/Pictures/Screenshots/$filename.png'
+    # Quick screenshot to clipboard
+bindsym $mod+Shift+p exec slurp | grim -g - - | xclip -i -selection clipboard -t image/png
 
     # Kill focused window
     bindsym $mod+Shift+q kill
