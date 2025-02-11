@@ -3,7 +3,7 @@
 #
 
 # Basic ZSH Options
-setopt autocd extendedglob
+setopt autocd
 
 # History Configuration
 HISTFILE=~/.zsh_history
