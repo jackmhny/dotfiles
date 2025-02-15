@@ -25,7 +25,6 @@ titlebar_padding 5 1
 default_border pixel 1
 # default_border normal
 default_floating_border pixel 1
-smart_borders on
 
 # Gaps configuration
 gaps inner 8
