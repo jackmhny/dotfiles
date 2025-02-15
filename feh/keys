@@ -1,0 +1,23 @@
+next_img         J
+prev_img         K
+
+scroll_left      h Left
+scroll_down      j Down
+scroll_up        k Up
+scroll_right     l Right
+
+jump_first       g Home
+jump_last        G End
+
+zoom_in          plus
+zoom_out         minus
+zoom_default     equals
+
+orient_1         r
+
+reload_image     R
+
+toggle_fullscreen F11
+
+quit             q Escape
+
