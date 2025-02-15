@@ -100,8 +100,8 @@ bindsym $mod+Shift+p exec slurp | grim -g - - | xclip -i -selection clipboard -t
     # Start your launcher
     bindsym $mod+d exec $menu
 
-    # Start Chrome/Chromium (tries unstable, stable, then chromium)
-    bindsym $mod+b exec which google-chrome-unstable >/dev/null && google-chrome-unstable || (which google-chrome >/dev/null && google-chrome || chromium)
+    # Start Chrome/Chromium/Firefox (tries unstable chrome, stable chrome, chromium, then firefox)
+    bindsym $mod+b exec which google-chrome-unstable >/dev/null && google-chrome-unstable || (which google-chrome >/dev/null && google-chrome || (which chromium >/dev/null && chromium || firefox))
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
