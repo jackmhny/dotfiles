@@ -9,7 +9,7 @@
 # tokyonight moon blue
 
 # Window borders and title colors
-client.focused          #82aaff #82aaff #1b1d2b #86e1fc   #82aaff
+client.focused          #82aaff #1b1d2b #c8d3f5 #86e1fc   #82aaff
 client.focused_inactive #444a73 #1b1d2b #82aaff #444a73   #444a73
 client.unfocused       #1b1d2b #1b1d2b #828bb8 #1b1d2b   #1b1d2b
 client.urgent          #ff757f #ff757f #c8d3f5 #ff757f   #ff757f
@@ -22,7 +22,7 @@ titlebar_padding 5 1
 
 
 # Window borders
-default_border pixel 1
+default_border pixel 2
 # default_border normal
 default_floating_border pixel 1
 
@@ -40,7 +40,7 @@ set $right l
 # Your preferred terminal emulator
 set $term foot
 # Your preferred application launcher
-set $menu wmenu-run
+set $menu wofi --show=drun
 
 ### Output configuration
 #
