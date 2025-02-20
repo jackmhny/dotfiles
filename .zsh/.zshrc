@@ -196,7 +196,7 @@ done
 
 # eval "$(uv generate-shell-completion zsh)"
 # eval "$(uvx --generate-shell-completion zsh)"
-alias fastfetch='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
+alias fastfetch_small='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
 
 alias connect_airpods='bluetoothctl connect 80:95:3A:C6:40:2D'
 
@@ -205,6 +205,7 @@ alias connect_orochi='bluetoothctl connect D7:4A:37:B4:F1:0E'
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/jm/.local/share/flatpak/exports/share"
 
 alias connect_XM5='bluetoothctl connect 88:C9:E8:D9:D4:C4'
+alias disconnect_XM5='bluetoothctl disconnect 88:C9:E8:D9:D4:C4'
 
 # ssh to my backup server
 alias sshd="ssh de4144"
