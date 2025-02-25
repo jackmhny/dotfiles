@@ -2,8 +2,8 @@
   border: none;
   border-radius: 0;
   font-family: IosevkaNerdFont Mono;
-  /* font-weight: 600; */
-  /* font-size: 12px; */
+  font-weight: 600;
+  font-size: 18px;
   min-height: 0;
 }
 

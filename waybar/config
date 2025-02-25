@@ -24,15 +24,6 @@
                  "10": "0"
          }
      },
-    "custom/date": {
-            "format": "󰸗 {}",
-        "interval": 3600,
-        "exec": "/home/loki/bin/waybar-date.sh"
-    },
-    "custom/power": {
-        "format": "󰐥",
-        "on-click": "/home/loki/bin/waybar-power.sh"
-    },
     "clock": {
         "format": "{:%H:%M}",
             "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
