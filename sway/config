@@ -133,10 +133,10 @@ bindsym $mod+Shift+p exec slurp | grim -g - - | xclip -i -selection clipboard -t
     bindsym $mod+Right focus right
 
     # Move the focused window with the same, but add Shift
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
+    bindsym $mod+Shift+$left move left 50px
+    bindsym $mod+Shift+$down move down 50px
+    bindsym $mod+Shift+$up move up 50px
+    bindsym $mod+Shift+$right move right 50px
     # Ditto, with arrow keys
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
