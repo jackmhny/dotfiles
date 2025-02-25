@@ -23,7 +23,7 @@ titlebar_padding 5 1
 
 # Window borders
 default_border pixel 2
-# default_border normal
+default_border normal
 default_floating_border pixel 1
 
 # Gaps configuration
