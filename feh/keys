@@ -11,7 +11,7 @@ jump_last        G End
 
 zoom_in          plus
 zoom_out         minus
-zoom_default     equals
+zoom_default     equal
 
 orient_1         r
 
