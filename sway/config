@@ -88,6 +88,12 @@ input type:touchpad {
     bindsym $mod+Shift+bracketright exec 1password --quick-access
     # Start a terminal
     bindsym $mod+Return exec $term
+    # Start a floating terminal
+    for_window [title="float"] floating enable
+    bindsym $mod+Shift+Return exec $term --title float
+    # floating ai terminal
+    for_window [title="ai"] floating enable, resize set 800 600
+    bindsym $mod+Shift+bracketleft exec $term --title ai -e zsh -ic 'aichat --session temp'
 
     # Quick screenshot via Grim and Slurp, Wofi
 bindsym $mod+Shift+g exec zsh -c 'filename=$(wofi -d --allow-empty --lines 1 --prompt "Enter the screenshot name:"); slurp | grim -g - ~/Pictures/Screenshots/$filename.png'
