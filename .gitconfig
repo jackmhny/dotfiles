@@ -1,3 +1,5 @@
+[core]
+	pager = delta
 [user]
 	email = jacksmahoney@gmail.com
 	name = Jack Mahoney (arch)
