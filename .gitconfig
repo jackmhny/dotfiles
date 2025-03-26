@@ -15,3 +15,7 @@
 	path = nvim
 [difftool]
 	prompt = false
+[tig]
+	main-view-date-display = relative-compact
+	main-view-author-display = abbreviated
+	line-graphics = utf-8
