@@ -110,7 +110,7 @@ bindsym $mod+Shift+p exec slurp | grim -g - - | wl-copy
     bindsym $mod+period exec wofi-emoji
 
     # Start Chrome/Chromium/Firefox (tries unstable chrome, stable chrome, chromium, then firefox)
-    bindsym $mod+b exec which google-chrome-unstable >/dev/null && google-chrome-unstable || (which google-chrome >/dev/null && google-chrome || (which chromium >/dev/null && chromium || firefox))
+    bindsym $mod+b exec which google-chrome-unstable >/dev/null && google-chrome-unstable || (which google-chrome-stable >/dev/null && google-chrome-stable || (which chromium >/dev/null && chromium || firefox))
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
