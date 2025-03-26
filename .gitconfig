@@ -2,7 +2,7 @@
 	pager = delta
 [user]
 	email = jacksmahoney@gmail.com
-	name = Jack Mahoney (arch)
+	name = Jack Mahoney
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
