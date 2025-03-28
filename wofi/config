@@ -1,4 +1,12 @@
 show=drun
 mode=drun
 allow_images=true
-image_size=24
+image_size=28
+width=30%
+height=40%
+prompt=Search
+filter_rate=100
+line_wrap=word
+insensitive=true
+matching=fuzzy
+sort_order=alphabetical
