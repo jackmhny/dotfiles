@@ -212,3 +212,5 @@ alias sshd="ssh de4144"
 
 alias catlovelylog="ls -t ~mods/lovely/log | head -n 1 | xargs -I {} cat ~mods/lovely/log/{}"
 
+hash -d mods="/mnt/c/Users/jacks/AppData/Roaming/Balatro/Mods"
+
