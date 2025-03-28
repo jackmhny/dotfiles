@@ -1,0 +1,43 @@
+/* colors from tokyonight.moon */
+* {
+  font-family: IosevkaNerdFont Mono;
+  font-weight: 600;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+window {
+  background: #181a27;
+  color: #c8d3f5;
+}
+
+#input {
+  margin: 6px;
+  background-color: #444a73;
+  padding: 2 8;
+}
+
+
+#inner-box {
+  margin: 6px;
+}
+
+#text {
+  margin: 4px;
+}
+
+#entry {
+  padding: 2px 8px;
+}
+
+#entry:selected {
+  background-color: #7aa2f7;
+}
+
+#entry:selected #text {
+  color: #1b1d2b;
+}
+
+#img {
+  margin-right: 8px;
+}
