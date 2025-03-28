@@ -209,3 +209,6 @@ alias disconnect_XM5='bluetoothctl disconnect 88:C9:E8:D9:D4:C4'
 
 # ssh to my backup server
 alias sshd="ssh de4144"
+
+alias catlovelylog="ls -t ~mods/lovely/log | head -n 1 | xargs -I {} cat ~mods/lovely/log/{}"
+
