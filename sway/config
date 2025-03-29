@@ -98,7 +98,8 @@ input type:touchpad {
     # Quick screenshot via Grim and Slurp, Wofi
 bindsym $mod+Shift+g exec zsh -c 'filename=$(wofi -d --allow-empty --lines 1 --prompt "Enter the screenshot name:"); slurp | grim -g - ~/Pictures/Screenshots/$filename.png'
     # Quick screenshot to clipboard
-bindsym $mod+Shift+p exec slurp | grim -g - - | wl-copy
+bindsym $mod+p exec slurp | grim -g - - | wl-copy
+bindsym $mod+Shift+p exec slurp | grim -g - - | tesseract - - |wl-copy
 
     # Kill focused window
     bindsym $mod+Shift+q kill
