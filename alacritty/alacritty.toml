@@ -9,19 +9,19 @@ opacity = 0.95
 size = 14
 
 [font.bold]
-family = "IosevkaNerdFont Mono"
+family = "Iosevka Term"
 style = "Bold"
 
 [font.bold_italic]
-family = "IosevkaNerdFont Mono"
+family = "Iosevka Term"
 style = "Bold Italic"
 
 [font.italic]
-family = "IosevkaNerdFont Mono"
+family = "Iosevka Term"
 style = "Italic"
 
 [font.normal]
-family = "IosevkaNerdFont Mono"
+family = "Iosevka Term"
 style = "Regular"
 
 # -----------------------------------------------------------------------------
