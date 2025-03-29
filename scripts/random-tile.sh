@@ -3,7 +3,7 @@
 # Function to choose a directory using wofi
 choose_directory() {
     # Define directories to choose from
-    DIRS=("$HOME/Pictures/tiles" "$HOME/Pictures/grayscale-tiles" "$HOME/Pictures/two-tone-tiles")
+    DIRS=("$HOME/Pictures/tiles" "$HOME/Pictures/grayscale-tiles" "$HOME/Pictures/gradient-tiles")
     
     # Use wofi to let user select a directory
     SELECTED_DIR=$(printf '%s\n' "${DIRS[@]}" | wofi --dmenu --prompt="Select tiles directory:")
