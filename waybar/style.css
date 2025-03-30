@@ -142,3 +142,11 @@ window#waybar {
   padding: 0 2px;
   margin: 0 2px;
 }
+
+#mode {
+    background-color: #ff757f;
+    margin: 5px;
+    padding: 2px 10px;
+    border-radius: 5px;
+    color: #24283b;
+}
