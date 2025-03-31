@@ -55,7 +55,7 @@
             "format-alt": "{ifname}: {ipaddr}/{cidr}"
     },
     "pulseaudio": {
-        "format": "{icon}  {volume}%",
+        "format": "{icon} {volume}%",
             "format-muted": "󰖁 Muted",
         "format-icons": {
             "headphone": "",
@@ -65,11 +65,11 @@
             "portable": "",
             "car": "",
             "default": ["","","", "", ""]
-        },
+        }
     },
     "tray": {
         "icon-size": 13,
-        "spacing": 5,
+        "spacing": 5
     }, 
     "disk": {
       "interval": 30,
