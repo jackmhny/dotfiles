@@ -109,6 +109,9 @@ bindsym $mod+Shift+p exec slurp | grim -g - - | tesseract - - |wl-copy
     # Start your launcher
     bindsym $mod+d exec $menu
 
+    # Open balatro
+    bindsym $mod+Shift+d exec steam steam://rungameid/2379780
+
     # Emoji picker
     bindsym $mod+period exec wofi-emoji
 
