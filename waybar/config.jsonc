@@ -73,7 +73,7 @@
     }, 
     "disk": {
       "interval": 30,
-      "format": "ROOT {percentage_free}% FREE",
+      "format": "ROOT {percentage_free}% FREE \uf0c7",
       "path": "/"
     }, 
     "memory": {
