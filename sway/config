@@ -100,6 +100,9 @@ input type:touchpad {
     for_window [title="ai"] floating enable, resize set 800 600
     bindsym $mod+Shift+bracketleft exec $term --title ai -e zsh -ic 'aichat --session temp'
 
+    for_window [title="Lovely 0.7.1"] move to workspace number 9
+
+
     # Quick screenshot via Grim and Slurp, Wofi
 bindsym $mod+Shift+g exec zsh -c 'filename=$(wofi -d --allow-empty --lines 1 --prompt "Enter the screenshot name:"); slurp | grim -g - ~/Pictures/Screenshots/$filename.png'
     # Quick screenshot to clipboard
