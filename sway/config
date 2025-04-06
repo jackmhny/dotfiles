@@ -26,6 +26,9 @@ default_border pixel 2
 default_border normal
 default_floating_border pixel 1
 
+# Font Config
+font pango:Iosevka Term 11
+
 # Gaps configuration
 gaps inner 8
 gaps outer 4
@@ -245,6 +248,8 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
+
+bindsym $mod+t sticky toggle
 #
 # Utilities:
 #
