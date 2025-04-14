@@ -15,6 +15,11 @@ client.unfocused       #1b1d2b #1b1d2b #828bb8 #1b1d2b   #1b1d2b
 client.urgent          #ff757f #ff757f #c8d3f5 #ff757f   #ff757f
 client.placeholder     #1b1d2b #1b1d2b #828bb8 #1b1d2b   #1b1d2b
 
+# # Make sticky windows have green borders
+# for_window [sticky] border pixel 2
+# for_window [sticky] border normal
+# for_window [sticky] client.focused          #36c95f #1b1d2b #c8d3f5 #36c95f   #36c95f
+
 # Title bar settings
 titlebar_border_thickness 1
 titlebar_padding 5 1
@@ -30,8 +35,8 @@ default_floating_border pixel 1
 font pango:Iosevka Term 11
 
 # Gaps configuration
-gaps inner 8
-gaps outer 4
+gaps inner 3
+gaps outer 3
 #
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
@@ -94,8 +99,8 @@ input type:touchpad {
     # Start a terminal
     bindsym $mod+Return exec $term
     # Start a floating terminal
-    for_window [title="float"] floating enable
-    bindsym $mod+Shift+Return exec $term --title float
+    # for_window [title="float"] floating enable
+    # bindsym $mod+Shift+Return exec $term --title float
     # floating ai terminal
     for_window [title="ai"] floating enable, resize set 800 600
     bindsym $mod+Shift+bracketleft exec $term --title ai -e zsh -ic 'aichat --session temp'
@@ -144,22 +149,12 @@ bindsym $mod+Shift+p exec slurp | grim -g - - | tesseract - - |wl-copy
     bindsym $mod+$down focus down
     bindsym $mod+$up focus up
     bindsym $mod+$right focus right
-    # Or use $mod+[up|down|left|right]
-    bindsym $mod+Left focus left
-    bindsym $mod+Down focus down
-    bindsym $mod+Up focus up
-    bindsym $mod+Right focus right
 
     # Move the focused window with the same, but add Shift
     bindsym $mod+Shift+$left move left 50px
     bindsym $mod+Shift+$down move down 50px
     bindsym $mod+Shift+$up move up 50px
     bindsym $mod+Shift+$right move right 50px
-    # Ditto, with arrow keys
-    bindsym $mod+Shift+Left move left
-    bindsym $mod+Shift+Down move down
-    bindsym $mod+Shift+Up move up
-    bindsym $mod+Shift+Right move right
 #
 # Workspaces:
 #
@@ -218,33 +213,21 @@ bindsym $mod+Shift+p exec slurp | grim -g - - | tesseract - - |wl-copy
 #
 # Scratchpad:
 #
-    # Sway has a "scratchpad", which is a bag of holding for windows.
-    # You can send windows there and get them back later.
-
     # Move the currently focused window to the scratchpad
     bindsym $mod+Shift+minus move scratchpad
 
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
     bindsym $mod+minus scratchpad show
+
 #
 # Resizing containers:
 #
 mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
     bindsym $left resize shrink width 50px
     bindsym $down resize grow height 50px
     bindsym $up resize shrink height 50px
     bindsym $right resize grow width 50px
-
-    # Ditto, with arrow keys
-    bindsym Left resize shrink width 50px
-    bindsym Down resize grow height 50px
-    bindsym Up resize shrink height 50px
-    bindsym Right resize grow width 50px
 
     # Return to default mode
     bindsym Return mode "default"
@@ -274,20 +257,7 @@ bindsym $mod+t sticky toggle
 #
 # Status Bar:
 #
-# Read `man 5 sway-bar` for more information about this section.
 bar {
-    # position top
-    #
-    # # When the status_command prints a new line to stdout, swaybar updates.
-    # # The default just shows the current date and time.
-    # status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-    #
-    # colors {
-    #     statusline #ffffff
-    #     background #323232
-    #     inactive_workspace #32323200 #32323200 #5c5c5c
-    # }
-
     swaybar_command waybar
 }
 
