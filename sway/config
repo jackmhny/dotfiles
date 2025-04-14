@@ -49,6 +49,8 @@ set $right l
 set $term alacritty
 # Your preferred application launcher
 set $menu wofi --show=drun -i
+# Your preferred file-manager
+set $file-manager thunar
 
 ### Output configuration
 #
@@ -119,6 +121,9 @@ bindsym $mod+Shift+p exec slurp | grim -g - - | tesseract - - |wl-copy
 
     # Start your launcher
     bindsym $mod+d exec $menu
+
+    # Open file manager
+    bindsym $mod+shift+w exec $file-manager
 
     # Open balatro
     bindsym $mod+Shift+d exec steam steam://rungameid/2379780
