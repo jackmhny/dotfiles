@@ -1,23 +1,24 @@
 [core]
-	pager = delta
+    pager = delta
+    excludesFile = ~/.gitignore_global
 [user]
-	email = jacksmahoney@gmail.com
-	name = Jack Mahoney
+    email = jacksmahoney@gmail.com
+    name = Jack Mahoney
 [credential "https://github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential
+    helper = 
+    helper = !/usr/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential
+    helper = 
+    helper = !/usr/bin/gh auth git-credential
 [diff]
-	tool = nvimdiff
+    tool = nvimdiff
 [difftool "nvimdiff"]
-	path = nvim
+    path = nvim
 [difftool]
-	prompt = false
+    prompt = false
 [tig]
-	main-view-date-display = relative-compact
-	main-view-author-display = abbreviated
-	line-graphics = utf-8
+    main-view-date-display = relative-compact
+    main-view-author-display = abbreviated
+    line-graphics = utf-8
 [init]
-	defaultBranch = master
+    defaultBranch = master
