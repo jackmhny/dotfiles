@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Generate a unique session name with timestamp
+SESSION_NAME="dev_session_$(date +%s)"
+
+# Start a new tmux session with nvim in the first window
+tmux new-session -d -s "$SESSION_NAME"
+
+# Create second window/tab and open nvim
+tmux new-window -t "$SESSION_NAME" 'nvim .'
+
+# Create third window/tab and run node -e "process.exit()" && claude
+tmux new-window -t "$SESSION_NAME" 'claude'
+
+# Go back to the first window
+tmux select-window -t "$SESSION_NAME":1
+
+# Attach to the session
+tmux attach-session -t "$SESSION_NAME"
