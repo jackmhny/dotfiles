@@ -77,7 +77,9 @@ bindkey -M vicmd v edit-command-line
 export EDITOR=nvim
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
 export PATH=$PATH:$HOME/.local/share/bob/nvim-bin
+export PATH=$PATH:$HOME/.cargo/bin
 export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/.nimble/bin
 
 # Source External Configurations
 eval "$(starship init zsh)"
@@ -215,3 +217,9 @@ alias catlovelylog="ls -t ~mods/lovely/log | head -n 1 | xargs -I {} cat ~mods/l
 hash -d mods="/home/jm/.local/share/Steam/steamapps/compatdata/2379780/pfx/drive_c/users/steamuser/AppData/Roaming/Balatro/Mods"
 hash -d mods_disabled="/home/jm/.disabled_mods"
 
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/jm/google-cloud-sdk/path.zsh.inc' ]; then . '/home/jm/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/jm/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/jm/google-cloud-sdk/completion.zsh.inc'; fi
