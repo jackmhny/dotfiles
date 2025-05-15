@@ -25,47 +25,37 @@ family = "Iosevka Term"
 style = "Regular"
 
 # -----------------------------------------------------------------------------
-# TokyoNight Alacritty Colors
-# Theme: Tokyo Night Moon
-# Upstream: https://github.com/folke/tokyonight.nvim/raw/main/extras/alacritty/tokyonight_moon.toml
+# Monokai Pure Black Alacritty
+# by jackmhny, adapted from https://app.unpkg.com/alacritty-themes@4.1.5/files/themes/Monokai.dark.yml
 # -----------------------------------------------------------------------------
 
-# Default colors
 [colors.primary]
-background = '#222436'
-foreground = '#c8d3f5'
+background = '#000000'
+foreground = '#f8f8f2'
 
 [colors.cursor]
-cursor = '#ff00ff'
-text = '#222436'
+cursor = '#f8f8f2'
+text = '#000000'
 
 # Normal colors
 [colors.normal]
-black = '#1b1d2b'
-red = '#ff757f'
-green = '#c3e88d'
-yellow = '#ffc777'
-blue = '#82aaff'
-magenta = '#c099ff'
-cyan = '#86e1fc'
-white = '#828bb8'
+black = '#000000'
+red = '#f92672'
+green = '#a6e22e'
+yellow = '#f4bf75'
+blue = '#66d9ef'
+magenta = '#ae81ff'
+cyan = '#a1efe4'
+white = '#f8f8f2'
 
 # Bright colors
 [colors.bright]
-black = '#444a73'
-red = '#ff8d94'
-green = '#c7fb6d'
-yellow = '#ffd8ab'
-blue = '#9ab8ff'
-magenta = '#caabff'
-cyan = '#b2ebff'
-white = '#c8d3f5'
+black = '#75715e'
+red = '#f92672'
+green = '#a6e22e'
+yellow = '#f4bf75'
+blue = '#66d9ef'
+magenta = '#ae81ff'
+cyan = '#a1efe4'
+white = '#f9f8f5'
 
-# Indexed Colors
-[[colors.indexed_colors]]
-index = 16
-color = '#ff966c'
-
-[[colors.indexed_colors]]
-index = 17
-color = '#c53b53'
