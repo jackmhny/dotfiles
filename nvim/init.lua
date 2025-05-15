@@ -1,5 +1,9 @@
 require("jvim")
 
+vim.opt.title = true
+vim.opt.titlestring = "%{expand('%:p:~')} - nvim"
+
+
 -- set tab to 2 spaces in lua files
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "lua",
