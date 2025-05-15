@@ -223,3 +223,12 @@ if [ -f '/home/jm/google-cloud-sdk/path.zsh.inc' ]; then . '/home/jm/google-clou
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/jm/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/jm/google-cloud-sdk/completion.zsh.inc'; fi
+
+
+
+# Load the custom command-not-found handler
+if [[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/command-not-found.zsh" ]]; then
+  source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/command-not-found.zsh"
+fi
+
+alias contabo="ssh contabo"
