@@ -37,25 +37,43 @@ foreground = '#f8f8f2'
 cursor = '#f8f8f2'
 text = '#000000'
 
-# Normal colors
-[colors.normal]
-black = '#000000'
-red = '#f92672'
-green = '#a6e22e'
-yellow = '#f4bf75'
-blue = '#66d9ef'
-magenta = '#ae81ff'
-cyan = '#a1efe4'
-white = '#f8f8f2'
+# # Normal colors
+# [colors.normal]
+# black = '#000000'
+# red = '#f92672'
+# green = '#a6e22e'
+# yellow = '#f4bf75'
+# blue = '#66d9ef'
+# magenta = '#ae81ff'
+# cyan = '#a1efe4'
+# white = '#f8f8f2'
 
-# Bright colors
+# # Bright colors
+# [colors.bright]
+# black = '#75715e'
+# red = '#f92672'
+# green = '#a6e22e'
+# yellow = '#f4bf75'
+# blue = '#66d9ef'
+# magenta = '#ae81ff'
+# cyan = '#a1efe4'
+# white = '#f9f8f5'
+
+[colors.normal]
+red = '#b81f56'        # Darker red
+green = '#7da018'      # Darker green
+yellow = '#c19a50'     # Darker yellow
+blue = '#3ca8c5'       # Darker blue
+magenta = '#8a5fd4'    # Darker magenta
+cyan = '#6dbbaf'       # Darker cyan
+white = '#f8f8f2'      # Darker white
+
 [colors.bright]
 black = '#75715e'
-red = '#f92672'
-green = '#a6e22e'
-yellow = '#f4bf75'
-blue = '#66d9ef'
-magenta = '#ae81ff'
-cyan = '#a1efe4'
-white = '#f9f8f5'
-
+red = '#ff5f87'        # Brighter, more vivid red
+green = '#c2ff00'      # Brighter, more lime green
+yellow = '#ffe066'     # Lighter, brighter yellow
+blue = '#84e0ff'       # Lighter, brighter blue
+magenta = '#c5a3ff'    # Lighter, more vibrant purple
+cyan = '#88ffd5'       # Brighter, more vibrant cyan
+white = '#ffffff'      # Pure white for maximum contras
