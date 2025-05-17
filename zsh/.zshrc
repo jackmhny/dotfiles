@@ -232,3 +232,4 @@ if [[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/command-not-found.zsh" ]]; then
 fi
 
 alias contabo="ssh contabo"
+setopt interactivecomments
