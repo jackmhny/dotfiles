@@ -1,8 +1,9 @@
 # Window configuration
 [window]
-dimensions = { columns = 120, lines = 30 }
-opacity = 0.95
+dimensions = { columns = 80, lines = 24 }
 
+[env]
+WINIT_X11_SCALE_FACTOR = "1.0"
 
 # Font configuration
 [font]
@@ -66,7 +67,7 @@ yellow = '#c19a50'     # Darker yellow
 blue = '#3ca8c5'       # Darker blue
 magenta = '#8a5fd4'    # Darker magenta
 cyan = '#6dbbaf'       # Darker cyan
-white = '#f8f8f2'      # Darker white
+white = '#ff00ff'      # Darker white
 
 [colors.bright]
 black = '#75715e'
