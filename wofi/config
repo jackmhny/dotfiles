@@ -8,5 +8,4 @@ prompt=Search
 filter_rate=100
 line_wrap=word
 insensitive=true
-matching=fuzzy
-sort_order=alphabetical
+matching=prefix
