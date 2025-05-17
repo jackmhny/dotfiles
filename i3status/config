@@ -1,0 +1,53 @@
+# jackmhny i3status
+
+order += "cpu_temperature 0"
+order += "wireless _first_"
+# order += "ethernet _first_"
+order += "disk /"
+order += "memory"
+order += "volume master"
+order += "battery 0"
+order += "tztime local"
+
+cpu_temperature 0 {
+    format = " %degrees°C"
+    path = "/sys/devices/platform/coretemp.0/hwmon/hwmon5/temp1_input"
+}
+
+wireless _first_ {
+    format_up = " %ip"
+    format_down = " down"
+}
+
+ethernet _first_ {
+    format_up = " %ip"
+    format_down = "  down"
+}
+
+battery 0 {
+    format = "󰁹 %percentage"
+    path = "/sys/class/power_supply/CMB0/uevent"
+}
+
+disk "/" {
+    format = " %percentage_used"
+}
+
+memory {
+    format = " %percentage_used"
+    threshold_degraded = "1G"
+    format_degraded = "MEMORY < %available"
+}
+
+tztime local {
+    format = "%d %b %Y / %I:%M %p"
+}
+
+volume master {
+        format = " %volume"
+        format_muted = " "
+        device = "default"
+        mixer = "Master"
+        mixer_idx = 0
+}
+
