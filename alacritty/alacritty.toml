@@ -1,6 +1,7 @@
 # Window configuration
 [window]
 dimensions = { columns = 80, lines = 24 }
+opacity = 0.8
 
 [env]
 WINIT_X11_SCALE_FACTOR = "1.0"
@@ -9,21 +10,19 @@ WINIT_X11_SCALE_FACTOR = "1.0"
 [font]
 size = 14
 
+[font.normal]
+family = "Terminess Nerd Font Mono"
+style = "Regular"
+
 [font.bold]
-family = "Iosevka Term"
 style = "Bold"
 
 [font.bold_italic]
-family = "Iosevka Term"
 style = "Bold Italic"
 
 [font.italic]
-family = "Iosevka Term"
 style = "Italic"
 
-[font.normal]
-family = "Iosevka Term"
-style = "Regular"
 
 # -----------------------------------------------------------------------------
 # Monokai Pure Black Alacritty
