@@ -4,6 +4,7 @@
 [user]
     email = jacksmahoney@gmail.com
     name = Jack Mahoney
+	signingkey = 9FB0A3A905392E9E
 [credential "https://github.com"]
     helper = 
     helper = !/usr/bin/gh auth git-credential
@@ -22,3 +23,7 @@
     line-graphics = utf-8
 [init]
     defaultBranch = master
+[commit]
+	gpgsign = true
+[gpg]
+	program = /usr/bin/gpg
