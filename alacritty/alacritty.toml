@@ -1,14 +1,14 @@
 # Window configuration
 [window]
 dimensions = { columns = 80, lines = 24 }
-opacity = 0.8
+opacity = 1.0
 
 [env]
 WINIT_X11_SCALE_FACTOR = "1.0"
 
 # Font configuration
 [font]
-size = 14
+size = 16
 
 [font.normal]
 family = "Terminess Nerd Font Mono"
