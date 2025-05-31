@@ -1,0 +1,10 @@
+Host rsync
+    HostName de4144.rsync.net
+    User de4144
+    IdentityFile ~/.ssh/id_ed25519
+
+Host contabo
+    HostName 209.126.84.214
+    User     root
+    IdentityFile ~/.ssh/id_ed25519
+    Port     22
