@@ -63,13 +63,13 @@ KEYTIMEOUT=1
 autoload -Uz edit-command-line
 zle -N edit-command-line
 
-# Custom vi-yank that also copies to Wayland clipboard
-function vi-yank-wl {
+# Custom vi-yank for xclip
+function vi-yank-x {
     zle vi-yank
-    echo "$CUTBUFFER" | wl-copy
+    echo "$CUTBUFFER" | xclip -selection clipboard
 }
-zle -N vi-yank-wl
-bindkey -M vicmd 'y' vi-yank-wl
+zle -N vi-yank-x
+bindkey -M vicmd 'y' vi-yank-x
 
 bindkey -M vicmd v edit-command-line
 
@@ -166,38 +166,6 @@ fcd() {
     dir=$(find ${1:-.} -type d -not -path '*/\.*' 2> /dev/null | fzf +m) && cd "$dir"
 }
 
-# Create wrappers around common nvm consumers.
-# nvm, node, yarn and npm will load nvm.sh on their first invocation,
-# posing no start up time penalty for the shells that aren't going to use them at all.
-# There is only single time penalty for one shell.
-
-typeset -ga __lazyLoadLabels=(nvm node npm npx pnpm yarn pnpx bun bunx)
-
-__load-nvm() {
-    export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-
-    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-}
-
-__work() {
-    for label in "${__lazyLoadLabels[@]}"; do
-        unset -f $label
-    done
-    unset -v __lazyLoadLabels
-
-    __load-nvm
-    unset -f __load-nvm __work
-}
-
-for label in "${__lazyLoadLabels[@]}"; do
-    eval "$label() { __work; $label \$@; }"
-done
-
-# end nvm lazy load
-
-# eval "$(uv generate-shell-completion zsh)"
-# eval "$(uvx --generate-shell-completion zsh)"
 alias fastfetch_small='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
 
 alias connect_airpods='bluetoothctl connect 80:95:3A:C6:40:2D'
@@ -233,3 +201,14 @@ fi
 
 alias contabo="ssh contabo"
 setopt interactivecomments
+
+0x0() {
+    curl -F "file=@${1:--}" https://0x0.st
+}
+nvm() {
+      unset -f nvm
+      source /usr/share/nvm/init-nvm.sh
+      nvm "$@"
+}
+
+alias borg="borg --remote-path=borg14"
