@@ -3,9 +3,6 @@
 dimensions = { columns = 80, lines = 24 }
 opacity = 1.0
 
-[env]
-WINIT_X11_SCALE_FACTOR = "1.0"
-
 # Font configuration
 [font]
 size = 16
@@ -23,57 +20,34 @@ style = "Bold Italic"
 [font.italic]
 style = "Italic"
 
-
 # -----------------------------------------------------------------------------
 # Monokai Pure Black Alacritty
-# by jackmhny, adapted from https://app.unpkg.com/alacritty-themes@4.1.5/files/themes/Monokai.dark.yml
 # -----------------------------------------------------------------------------
-
 [colors.primary]
-background = '#000000'
-foreground = '#f8f8f2'
+background = "#000000"
+foreground = "#FFFFFF"
 
 [colors.cursor]
-cursor = '#f8f8f2'
-text = '#000000'
-
-# # Normal colors
-# [colors.normal]
-# black = '#000000'
-# red = '#f92672'
-# green = '#a6e22e'
-# yellow = '#f4bf75'
-# blue = '#66d9ef'
-# magenta = '#ae81ff'
-# cyan = '#a1efe4'
-# white = '#f8f8f2'
-
-# # Bright colors
-# [colors.bright]
-# black = '#75715e'
-# red = '#f92672'
-# green = '#a6e22e'
-# yellow = '#f4bf75'
-# blue = '#66d9ef'
-# magenta = '#ae81ff'
-# cyan = '#a1efe4'
-# white = '#f9f8f5'
+text   = "#000000"
+cursor = "#FFFFFF"
 
 [colors.normal]
-red = '#b81f56'        # Darker red
-green = '#7da018'      # Darker green
-yellow = '#c19a50'     # Darker yellow
-blue = '#3ca8c5'       # Darker blue
-magenta = '#8a5fd4'    # Darker magenta
-cyan = '#6dbbaf'       # Darker cyan
-white = '#dddddd'      # Darker white
+black   = "#000000"
+red     = "#FF0000"
+green   = "#00FF00"
+yellow  = "#FFFF00"
+blue    = "#0000FF"
+magenta = "#FF00FF"
+cyan    = "#00FFFF"
+white   = "#FFFFFF"
 
 [colors.bright]
-black = '#75715e'
-red = '#ff5f87'        # Brighter, more vivid red
-green = '#c2ff00'      # Brighter, more lime green
-yellow = '#ffe066'     # Lighter, brighter yellow
-blue = '#84e0ff'       # Lighter, brighter blue
-magenta = '#c5a3ff'    # Lighter, more vibrant purple
-cyan = '#88ffd5'       # Brighter, more vibrant cyan
-white = '#ffffff'      # Pure white for maximum contras
+black   = "#888888"
+red     = "#FF5555"
+green   = "#55FF55"
+yellow  = "#FFFF55"
+blue    = "#5555FF"
+magenta = "#FF55FF"
+cyan    = "#55FFFF"
+white   = "#FFFFFF"
+
