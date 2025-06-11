@@ -1,0 +1,28 @@
+# Aliases
+alias ls='ls --color=auto'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias lh='ls -lh'
+alias lt='ls -ltr'
+alias lS='ls -lSr'
+# Vim aliases
+alias vi='nvim'
+alias vim='nvim'
+# aichat alias
+alias ai='aichat --session temp'
+# aider alias
+alias aider1='aider --architect --model r1 --editor-model sonnet'
+# lazygit alias
+alias lg="lazygit"
+alias fzvim='fzf \
+alias fastfetch_small='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
+# Bluetooth aliases
+alias connect_airpods='bluetoothctl connect 80:95:3A:C6:40:2D'
+alias connect_orochi='bluetoothctl connect D7:4A:37:B4:F1:0E'
+alias connect_XM5='bluetoothctl connect 88:C9:E8:D9:D4:C4'
+alias disconnect_XM5='bluetoothctl disconnect 88:C9:E8:D9:D4:C4'
+# ssh aliases
+alias sshd="ssh de4144"
+alias contabo="ssh contabo"
+alias borg="borg --remote-path=borg14"

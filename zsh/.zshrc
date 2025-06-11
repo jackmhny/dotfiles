@@ -86,18 +86,7 @@ eval "$(starship init zsh)"
 . "$HOME/.cargo/env" 2>/dev/null || true
 [[ -f ~/.env ]] && source ~/.env
 
-# Aliases
-alias ls='ls --color=auto'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias lh='ls -lh'
-alias lt='ls -ltr'
-alias lS='ls -lSr'
 
-# Vim aliases
-alias vi='nvim'
-alias vim='nvim'
 
 # Shell-GPT Integration
 _sgpt_zsh() {
@@ -146,16 +135,9 @@ if [[ -f /etc/os-release && $(grep -c "ID=arch" /etc/os-release) -gt 0 ]]; then
   fi
 
 
-# aichat alias
-alias ai='aichat --session temp'
 
-# aider alias
-alias aider1='aider --architect --model r1 --editor-model sonnet'
 
-# lazygit alias
-alias lg="lazygit"
 
-alias fzvim='fzf \
     --preview "command -v bat >/dev/null 2>&1 \
         && bat --color=always -n {} \
         || cat {}" \
@@ -167,21 +149,11 @@ fcd() {
     dir=$(find ${1:-.} -type d -not -path '*/\.*' 2> /dev/null | fzf +m) && cd "$dir"
 }
 
-alias fastfetch_small='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
 
-# Bluetooth aliases
-alias connect_airpods='bluetoothctl connect 80:95:3A:C6:40:2D'
-alias connect_orochi='bluetoothctl connect D7:4A:37:B4:F1:0E'
-alias connect_XM5='bluetoothctl connect 88:C9:E8:D9:D4:C4'
-alias disconnect_XM5='bluetoothctl disconnect 88:C9:E8:D9:D4:C4'
 
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/jm/.local/share/flatpak/exports/share"
 
 
-# ssh aliases
-alias sshd="ssh de4144"
-alias contabo="ssh contabo"
-alias borg="borg --remote-path=borg14"
 
 
 hash -d mods="/home/jm/.local/share/Steam/steamapps/compatdata/2379780/pfx/drive_c/users/steamuser/AppData/Roaming/Balatro/Mods"
@@ -213,3 +185,4 @@ nvm() {
       nvm "$@"
 }
 
+[ -f ./.aliases ] && source ./.aliases
