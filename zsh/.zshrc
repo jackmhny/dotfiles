@@ -138,10 +138,6 @@ if [[ -f /etc/os-release && $(grep -c "ID=arch" /etc/os-release) -gt 0 ]]; then
 
 
 
-    --preview "command -v bat >/dev/null 2>&1 \
-        && bat --color=always -n {} \
-        || cat {}" \
-    --bind "enter:execute(nvim {})"'
 
 # Fuzzy directory navigation
 fcd() {

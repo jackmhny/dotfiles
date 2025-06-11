@@ -16,6 +16,10 @@ alias aider1='aider --architect --model r1 --editor-model sonnet'
 # lazygit alias
 alias lg="lazygit"
 alias fzvim='fzf \
+    --preview "command -v bat >/dev/null 2>&1 \
+        && bat --color=always -n {} \
+        || cat {}" \
+    --bind "enter:execute(nvim {})"'
 alias fastfetch_small='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
 # Bluetooth aliases
 alias connect_airpods='bluetoothctl connect 80:95:3A:C6:40:2D'
