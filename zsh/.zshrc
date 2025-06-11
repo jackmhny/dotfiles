@@ -152,6 +152,7 @@ alias ai='aichat --session temp'
 # aider alias
 alias aider1='aider --architect --model r1 --editor-model sonnet'
 
+# lazygit alias
 alias lg="lazygit"
 
 alias fzvim='fzf \
@@ -168,19 +169,20 @@ fcd() {
 
 alias fastfetch_small='fastfetch --logo small --structure Title:Separator:Os:Host:Kernel:Uptime:Shell:Colors'
 
+# Bluetooth aliases
 alias connect_airpods='bluetoothctl connect 80:95:3A:C6:40:2D'
-
 alias connect_orochi='bluetoothctl connect D7:4A:37:B4:F1:0E'
-
-export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/jm/.local/share/flatpak/exports/share"
-
 alias connect_XM5='bluetoothctl connect 88:C9:E8:D9:D4:C4'
 alias disconnect_XM5='bluetoothctl disconnect 88:C9:E8:D9:D4:C4'
 
-# ssh to my backup server
-alias sshd="ssh de4144"
+export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/jm/.local/share/flatpak/exports/share"
 
-alias catlovelylog="ls -t ~mods/lovely/log | head -n 1 | xargs -I {} cat ~mods/lovely/log/{}"
+
+# ssh aliases
+alias sshd="ssh de4144"
+alias contabo="ssh contabo"
+alias borg="borg --remote-path=borg14"
+
 
 hash -d mods="/home/jm/.local/share/Steam/steamapps/compatdata/2379780/pfx/drive_c/users/steamuser/AppData/Roaming/Balatro/Mods"
 hash -d mods_disabled="/home/jm/.disabled_mods"
@@ -199,7 +201,7 @@ if [[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/command-not-found.zsh" ]]; then
   source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/command-not-found.zsh"
 fi
 
-alias contabo="ssh contabo"
+
 setopt interactivecomments
 
 0x0() {
@@ -211,4 +213,3 @@ nvm() {
       nvm "$@"
 }
 
-alias borg="borg --remote-path=borg14"
