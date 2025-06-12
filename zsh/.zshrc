@@ -181,4 +181,6 @@ nvm() {
       nvm "$@"
 }
 
-[ -f ./.aliases ] && source ./.aliases
+
+[ -f $ZDOTDIR/.aliases ] && source $ZDOTDIR/.aliases
+
