@@ -27,3 +27,5 @@
 	gpgsign = true
 [gpg]
 	program = /usr/bin/gpg
+[delta]
+	keep-plus-minus-markers = true
