@@ -30,3 +30,4 @@ alias disconnect_XM5='bluetoothctl disconnect 88:C9:E8:D9:D4:C4'
 alias sshd="ssh de4144"
 alias contabo="ssh contabo"
 alias borg="borg --remote-path=borg14"
+alias nvm="fnm"

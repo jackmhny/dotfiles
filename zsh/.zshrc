@@ -24,7 +24,7 @@ export CLICOLOR=1
 eval "$(dircolors -b)"
 
 # Completion System
-# fpath=(~/.zsh/completions $fpath)
+fpath=($ZDOTDIR/completions $fpath)
 autoload -Uz compinit && compinit
 
 # load compinit and rebind ^I (tab) to expand-or-complete, then compile
@@ -175,12 +175,8 @@ setopt interactivecomments
 0x0() {
     curl -F "file=@${1:--}" https://0x0.st
 }
-nvm() {
-      unset -f nvm
-      source /usr/share/nvm/init-nvm.sh
-      nvm "$@"
-}
 
+eval "$(fnm env --use-on-cd --shell zsh)"
 
 [ -f $ZDOTDIR/.aliases ] && source $ZDOTDIR/.aliases
 
