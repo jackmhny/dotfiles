@@ -242,8 +242,8 @@ bindsym $mod+t sticky toggle
     # Special keys to adjust brightness via brightnessctl
     bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
     bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 5%+
-    # Special key to take a screenshot (full screen with scrot/maim)
-    bindsym Print scrot ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
+    # Special key to take a screenshot (full screen with maim)
+    bindsym Print exec --no-startup-id maim -s ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
     # bindsym KP_9 exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
     # bindsym KP_6 exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
     bindsym KP_9 exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
