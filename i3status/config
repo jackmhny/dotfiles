@@ -11,7 +11,7 @@ order += "tztime local"
 
 cpu_temperature 0 {
     format = " %degrees°C"
-    path = "/sys/devices/platform/coretemp.0/hwmon/hwmon5/temp1_input"
+    path = "/sys/devices/platform/coretemp.0/hwmon/hwmon4/temp2_input"
 }
 
 wireless _first_ {
@@ -26,7 +26,7 @@ ethernet _first_ {
 
 battery 0 {
     format = "󰁹 %percentage"
-    path = "/sys/class/power_supply/CMB0/uevent"
+    path = "/sys/class/power_supply/BAT1/uevent"
 }
 
 disk "/" {
