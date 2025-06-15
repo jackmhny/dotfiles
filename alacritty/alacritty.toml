@@ -8,7 +8,7 @@ WINIT_X11_SCALE_FACTOR = "1.0"
 
 # Font configuration
 [font]
-size = 10
+size = 12
 
 [font.normal]
 family = "Terminess Nerd Font Mono"
