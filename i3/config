@@ -111,7 +111,9 @@ for_window [class=".*"] border normal
     bindsym $mod+period exec rofi -show emoji -modi emoji
 
     # Start Chrome/Chromium/Firefox
-    bindsym $mod+b exec --no-startup-id sh -c 'which google-chrome-unstable >/dev/null && google-chrome-unstable || (which google-chrome-stable >/dev/null && google-chrome-stable || (which chromium >/dev/null && chromium || firefox))'
+    bindsym $mod+b exec --no-startup-id ~/.local/bin/launch-browser.sh
+
+
 
     # Reload the configuration file
     bindsym $mod+Shift+c reload
