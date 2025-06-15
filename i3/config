@@ -6,8 +6,17 @@ set $mod Mod4
 # Font for window titles.
 font pango:Terminus 8
 
-gaps inner 8
-gaps outer 4
+# gaps inner 8
+# gaps outer 4
+
+# Window appearance - no title bars, white borders
+for_window [class=".*"] border pixel 1
+client.unfocused        #000000 #000000 #ffffff #000000 #000000
+client.focused_inactive #000000 #000000 #ffffff #000000 #000000
+client.focused          #ffffff #ffffff #000000 #ffffff #ffffff
+client.urgent           #ff0000 #ff0000 #000000 #ff0000 #ff0000
+client.placeholder      #ffffff #ffffff #000000 #ffffff #ffffff
+client.background       #ffffff
 
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -47,12 +56,11 @@ exec --no-startup-id sh -c 'export XDG_CONFIG_HOME="$HOME/.config"'
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
 
 # wallpaper
-exec --no-startup-id feh --bg-max ~/Pictures/consummation.jpg
+# exec --no-startup-id feh --bg-max ~/Pictures/consummation.jpg
 # exec --no-startup-id feh --bg-max ~/Pictures/pastoral.jpg
 
 
 
-for_window [class=".*"] border normal
 
 # Wallpaper - i3 doesn't handle this directly. Use a tool like feh.
 # Add this to your startup, e.g., by creating a script and exec'ing it,
@@ -260,4 +268,14 @@ bar {
     separator_symbol "::"
     tray_padding 4
     strip_workspace_numbers yes
+    colors {
+        background #000000
+        statusline #ffffff
+        separator  #aaaaaa
+
+        focused_workspace  #ffffff #ffffff #000000
+        active_workspace   #000000 #000000 #ffffff
+        inactive_workspace #000000 #000000 #ffffff
+        urgent_workspace   #ffffff #ffffff #000000
+    }
 }
