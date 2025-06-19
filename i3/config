@@ -11,7 +11,7 @@ font pango:Terminus 8
 
 # Window appearance - no title bars, white borders
 for_window [class=".*"] border pixel 1
-client.unfocused        #000000 #000000 #ffffff #000000 #000000
+client.unfocused        #ffffff #000000 #ffffff #000000 #000000
 client.focused_inactive #000000 #000000 #ffffff #000000 #000000
 client.focused          #ffffff #ffffff #000000 #ffffff #ffffff
 client.urgent           #ff0000 #ff0000 #000000 #ff0000 #ff0000
