@@ -5,9 +5,11 @@ return {
     },
     config = function()
         require('Comment').setup({
-            -- Enable keybindings
-            -- `gc` operator for line comments
-            -- `gb` operator for block comments
+            mappings = {
+                basic = false,  -- Disable gc/gb mappings
+                extra = false,  -- Disable gco/gcO/etc mappings
+            }
+
         })
 
         local api = require('Comment.api')

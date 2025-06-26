@@ -6,6 +6,9 @@ return {
         },
         config = function()
             require('nvim-treesitter.configs').setup({
+                highlight = {
+                    enable = true,
+                },
                 textobjects = {
                     select = {
                         enable = true,
