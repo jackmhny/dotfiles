@@ -38,6 +38,9 @@ set $file-manager thunar
 # start the compositor
 exec --no-startup-id picom -b --no-fading-openclose --fade-in-step=1 --fade-out-step=1 --fade-delta=0 --backend glx
 
+#notifyer
+exec --no-startup-id dunst
+
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
@@ -238,6 +241,8 @@ mode "resize" {
     bindsym $mod+r mode "default"
 }
 bindsym $mod+r mode "resize"
+
+bindsym $mod+c exec --no-startup-id /home/jm/.local/bin/autoclicker
 
 bindsym $mod+t sticky toggle
 #
