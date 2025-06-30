@@ -8,3 +8,14 @@ Host contabo
     User     root
     IdentityFile ~/.ssh/id_ed25519
     Port     22
+
+Host NZXT
+    HostName 192.168.1.64
+    User jm
+    IdentityFile ~/.ssh/mykey
+
+Host lg
+    HostName 192.168.1.35
+    User jackmhny
+    IdentityFile ~/.ssh/mykey
+    Port 22
