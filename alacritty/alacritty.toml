@@ -20,34 +20,27 @@ style = "Bold Italic"
 [font.italic]
 style = "Italic"
 
-# -----------------------------------------------------------------------------
-# Monokai Pure Black Alacritty
-# -----------------------------------------------------------------------------
 [colors.primary]
-background = "#000000"
-foreground = "#FFFFFF"
-
-[colors.cursor]
-text   = "#000000"
-cursor = "#FFFFFF"
+background = '#000000'
+foreground = '#cccccc'
 
 [colors.normal]
-black   = "#000000"
-red     = "#FF0000"
-green   = "#00FF00"
-yellow  = "#FFFF00"
-blue    = "#0000FF"
-magenta = "#FF00FF"
-cyan    = "#00FFFF"
-white   = "#FFFFFF"
+black      = '#000000'
+red        = '#c50f1f'
+green      = '#13a10e'
+yellow     = '#c19c00'
+blue       = '#0037da'
+magenta    = '#881798'
+cyan       = '#3a96dd'
+white      = '#cccccc'
 
 [colors.bright]
-black   = "#888888"
-red     = "#FF5555"
-green   = "#55FF55"
-yellow  = "#FFFF55"
-blue    = "#5555FF"
-magenta = "#FF55FF"
-cyan    = "#55FFFF"
-white   = "#FFFFFF"
+black      = '#767676'
+red        = '#e74856'
+green      = '#16c60c'
+yellow     = '#f9f1a5'
+blue       = '#3b78ff'
+magenta    = '#b4009e'
+cyan       = '#61d6d6'
+white      = '#f2f2f2'
 
