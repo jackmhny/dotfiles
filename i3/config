@@ -114,7 +114,7 @@ exec --no-startup-id feh --bg-max ~/Pictures/wallpapers/wall.jpg
 
     # Emoji picker (using rofi)
     # You might need to install a rofi emoji plugin or script, e.g., rofi-emoji
-    bindsym $mod+period exec rofi -show emoji -modi emoji
+    bindsym $mod+period exec rofimoji
 
     # Start Chrome/Chromium/Firefox
     bindsym $mod+b exec --no-startup-id ~/.local/bin/launch-browser.sh
