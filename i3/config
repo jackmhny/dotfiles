@@ -4,7 +4,7 @@
 set $mod Mod4
 
 # Font for window titles.
-font pango:Terminus 14
+font pango:Terminus (TTF) 14
 
 # gaps inner 8
 # gaps outer 4
