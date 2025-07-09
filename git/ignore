@@ -1,3 +1,5 @@
 .zsh/.zcompdump
 .zsh/.zcompdump.zwc
 .lovelyignore
+
+**/.claude/settings.local.json
