@@ -65,12 +65,7 @@ exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secr
 
 
 
-# Wallpaper - i3 doesn't handle this directly. Use a tool like feh.
-# Add this to your startup, e.g., by creating a script and exec'ing it,
-# or by adding it directly if your i3 version supports multiple execs well.
-# exec --no-startup-id feh --bg-fill ~/Pictures/wall.jpg
-# For random tiles, you'd need to adapt your script for X11 if it's Wayland-specific.
-# bindsym $mod+Shift+b exec --no-startup-id ~/.local/bin/random-tile-x11.sh # Assuming you create/adapt this script
+exec --no-startup-id feh --bg-max ~/Pictures/wallpapers/wall.jpg
 
 ### Key bindings
 #
