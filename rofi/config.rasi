@@ -90,8 +90,8 @@ element-icon {
 window {
     padding:          5;
     background-color: Black;
-    width:            400px ;
-    height:           400px ;
+    width:            600px ;
+    height:           480px ;
     border-color:     White;
     border:           1;
 }
