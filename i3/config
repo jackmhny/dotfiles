@@ -29,9 +29,10 @@ set $down j
 set $up k
 set $right l
 
-set $term alacritty
+set $term kitty
 set $menu rofi -show drun -i
 set $file-manager thunar
+set $term-file-manager kitty -e yazi
 
 # Autostart applications
 
@@ -108,6 +109,8 @@ exec --no-startup-id feh --bg-max ~/Pictures/wallpapers/wall.jpg
 
     # Open file manager
     bindsym $mod+shift+w exec $file-manager
+    bindsym $mod+shift+y exec $term-file-manager
+
 
     # Open balatro
     bindsym $mod+Shift+d exec steam steam://rungameid/2379780
