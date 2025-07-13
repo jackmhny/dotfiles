@@ -21,5 +21,7 @@ return {
         ["<C-s>"] = "actions.jump_split",
       },
     })
+
+    vim.keymap.set("n", "<leader>e", "<cmd>AerialToggle<CR>")
   end,
 }

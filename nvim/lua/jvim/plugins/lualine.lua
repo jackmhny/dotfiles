@@ -3,9 +3,11 @@ return {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
         require('lualine').setup({
-            -- options = {
-            --     theme = 'iceberg_dark'
-            -- }
+            options = {
+                theme = 'base16',
+                section_separators = '',
+                component_separators = ''
+            }
         })
     end
 }
