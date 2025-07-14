@@ -33,3 +33,4 @@ alias borg="borg --remote-path=borg14"
 alias nvm="fnm"
 
 alias v="nvim ."
+alias s="kitten ssh"
