@@ -267,18 +267,19 @@ bindsym $mod+t sticky toggle
 
 bar {
     status_command i3status
+    i3bar_command i3bar -t
     position top
     separator_symbol "::"
     tray_padding 4
     strip_workspace_numbers yes
     colors {
-        background #000000
+        background #000000cc
         statusline #ffffff
-        separator  #aaaaaa
+        separator  #aaaaaacc
 
-        focused_workspace  #ffffff #ffffff #000000
-        active_workspace   #000000 #000000 #ffffff
-        inactive_workspace #000000 #000000 #ffffff
+        focused_workspace  #ffffffcc #ffffffcc #000000
+        active_workspace   #000000cc #000000cc #ffffff
+        inactive_workspace #000000cc #000000cc #ffffff
         urgent_workspace   #ff0000 #ff0000 #ffffff
     }
 }
