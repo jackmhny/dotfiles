@@ -156,3 +156,5 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     eval "$(ssh-agent -s)" > /dev/null
 fi
 ssh-add ~/.ssh/mykey 2>/dev/null
+
+export MANPAGER="nvim +Man!"
