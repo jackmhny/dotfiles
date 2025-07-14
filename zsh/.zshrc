@@ -151,3 +151,8 @@ function y() {
     rm -f -- "$tmp"
 }
 
+# Add your SSH key (silently)
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)" > /dev/null
+fi
+ssh-add ~/.ssh/mykey 2>/dev/null
