@@ -10,12 +10,25 @@ Host contabo
     Port     22
 
 Host NZXT
-    HostName 192.168.1.64
+    HostName 192.168.1.90
     User jm
     IdentityFile ~/.ssh/mykey
 
 Host lg
-    HostName 192.168.1.35
+    HostName 192.168.1.42
     User jackmhny
+    IdentityFile ~/.ssh/mykey
+    Port 22
+
+Host lg-ngrok
+    Hostname 6.tcp.us-cal-1.ngrok.io
+    User jackmhny
+    IdentityFile ~/.ssh/mykey
+    SendEnv GEMINI_API_KEY
+    Port 10464
+
+Host rpijm
+    HostName 192.168.1.66
+    User jm
     IdentityFile ~/.ssh/mykey
     Port 22

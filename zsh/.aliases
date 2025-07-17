@@ -34,3 +34,5 @@ alias nvm="fnm"
 
 alias v="nvim ."
 alias s="kitten ssh"
+alias grep='grep --color=auto'
+

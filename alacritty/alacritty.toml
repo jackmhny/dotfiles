@@ -1,14 +1,14 @@
 # Window configuration
 [window]
 dimensions = { columns = 80, lines = 24 }
-opacity = 0.8
+opacity = 0.75
 
 # Font configuration
 [font]
-size = 16
+size = 11
 
 [font.normal]
-family = "Terminess Nerd Font Mono"
+family = "TerminessNerdFontMono"
 style = "Regular"
 
 [font.bold]

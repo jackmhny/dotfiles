@@ -4,7 +4,7 @@
 set $mod Mod4
 
 # Font for window titles.
-font pango:Terminus (TTF) 14
+font pango:TerminessNerdFontMono 15
 
 # gaps inner 8
 # gaps outer 4
@@ -104,6 +104,9 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
     # Open file manager
     bindsym $mod+shift+w exec $file-manager
     bindsym $mod+shift+y exec $term-file-manager
+
+    # Open vim
+    bindsym $mod+Shift+v exec $term -e vim
 
 
     # Open balatro
@@ -267,7 +270,7 @@ bar {
     tray_padding 4
     strip_workspace_numbers yes
     colors {
-        background #000000cc
+        background #00000000
         statusline #ffffff
         separator  #aaaaaacc
 

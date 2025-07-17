@@ -1,6 +1,9 @@
 [gcloud]
 disabled = true
 
+[aws]
+disabled = true
+
 [character]
 format = '$symbol '
 success_symbol = '[>](bold green)'
