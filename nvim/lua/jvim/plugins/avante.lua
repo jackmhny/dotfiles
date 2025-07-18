@@ -46,7 +46,7 @@ return {
       -- "zbirenbaum/copilot.lua", -- for providers='copilot'
       {
         -- support for image pasting
-        "HakonHarnes/img-clip.nvim",
+        -- "HakonHarnes/img-clip.nvim",
         event = "VeryLazy",
         opts = {
           -- recommended settings
