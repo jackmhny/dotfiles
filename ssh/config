@@ -27,8 +27,14 @@ Host lg-ngrok
     SendEnv GEMINI_API_KEY
     Port 10464
 
-Host rpijm
+Host rpi3b
     HostName 192.168.1.66
     User jm
     IdentityFile ~/.ssh/mykey
     Port 22
+
+Host alien
+    HostName 192.168.1.44
+
+Host rpi5
+    HostName 192.168.1.60
