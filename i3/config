@@ -11,12 +11,12 @@ font pango:TerminessNerdFontMono 15
 
 # Window appearance - no title bars, white borders
 for_window [class=".*"] border pixel 1
-client.unfocused        #ffffff #000000 #ffffff #000000 #000000
-client.focused_inactive #000000 #000000 #ffffff #000000 #000000
-client.focused          #ffffff #ffffff #000000 #ffffff #ffffff
-client.urgent           #ff0000 #ff0000 #000000 #ff0000 #ff0000
-client.placeholder      #ffffff #ffffff #000000 #ffffff #ffffff
-client.background       #ffffff
+# client.unfocused        #ffffff #000000 #ffffff #000000 #000000
+# client.focused_inactive #000000 #000000 #ffffff #000000 #000000
+# client.focused          #ffffff #ffffff #000000 #ffffff #ffffff
+# client.urgent           #ff0000 #ff0000 #000000 #ff0000 #ff0000
+# client.placeholder      #ffffff #ffffff #000000 #ffffff #ffffff
+# client.background       #ffffff
 
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -60,7 +60,7 @@ exec --no-startup-id sh -c 'export XDG_CONFIG_HOME="$HOME/.config"'
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
 
 # wallpaper
-exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
+# exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
 
 ### Key bindings
 #
@@ -264,18 +264,18 @@ bindsym $mod+t sticky toggle
 
 bar {
     status_command i3status
-    i3bar_command i3bar -t
+    # i3bar_command i3bar -t
     position top
-    separator_symbol "::"
-    tray_padding 4
-    colors {
-        background #00000000
-        statusline #ffffff
-        separator  #aaaaaacc
-
-        focused_workspace  #ffffffcc #ffffffcc #000000
-        active_workspace   #000000cc #000000cc #ffffff
-        inactive_workspace #000000cc #000000cc #ffffff
-        urgent_workspace   #ff0000 #ff0000 #ffffff
-    }
+    # separator_symbol "::"
+    # tray_padding 4
+    # colors {
+    #     background #00000000
+    #     statusline #ffffff
+    #     separator  #aaaaaacc
+    #
+    #     focused_workspace  #ffffffcc #ffffffcc #000000
+    #     active_workspace   #000000cc #000000cc #ffffff
+    #     inactive_workspace #000000cc #000000cc #ffffff
+    #     urgent_workspace   #ff0000 #ff0000 #ffffff
+    # }
 }
