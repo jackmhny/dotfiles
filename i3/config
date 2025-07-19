@@ -144,16 +144,16 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
 #
 # Workspaces:
 # Define names for default workspaces (optional but good practice)
-set $ws1 "1:1"
-set $ws2 "2:2"
-set $ws3 "3:3"
-set $ws4 "4:4"
-set $ws5 "5:5"
-set $ws6 "6:6"
-set $ws7 "7:7"
-set $ws8 "8:8"
-set $ws9 "9:9"
-set $ws10 "10:0"
+set $ws1 1
+set $ws2 2
+set $ws3 3
+set $ws4 4
+set $ws5 5
+set $ws6 6
+set $ws7 7
+set $ws8 8
+set $ws9 9
+set $ws10 10
 
     # Switch to workspace
     bindsym $mod+1 workspace number $ws1
@@ -268,7 +268,6 @@ bar {
     position top
     separator_symbol "::"
     tray_padding 4
-    strip_workspace_numbers yes
     colors {
         background #00000000
         statusline #ffffff
