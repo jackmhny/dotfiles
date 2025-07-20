@@ -1,27 +1,16 @@
-# i3 config file
-# Based on a converted Sway config and an existing i3 config.
-# Set the modifier key to Super/Windows key
+# jackmhny's i3 config file
 set $mod Mod4
 
 # Font for window titles.
 font pango:TerminessNerdFontMono 15
 
-# gaps inner 8
-# gaps outer 4
+gaps inner 4
+gaps outer 2
 
-# Window appearance - no title bars, white borders
-for_window [class=".*"] border pixel 1
-# client.unfocused        #ffffff #000000 #ffffff #000000 #000000
-# client.focused_inactive #000000 #000000 #ffffff #000000 #000000
-# client.focused          #ffffff #ffffff #000000 #ffffff #ffffff
-# client.urgent           #ff0000 #ff0000 #000000 #ff0000 #ff0000
-# client.placeholder      #ffffff #ffffff #000000 #ffffff #ffffff
-# client.background       #ffffff
-
+for_window [class=".*"] border pixel 2
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
-
 
 # Home row direction keys, like vim
 set $left h
@@ -39,7 +28,7 @@ set $term-file-manager kitty -e yazi
 # start the compositor
 exec --no-startup-id picom -b --no-fading-openclose --fade-in-step=1 --fade-out-step=1 --fade-delta=0 --backend glx
 
-#notifyer
+# notifyer
 exec --no-startup-id dunst
 
 # Start XDG autostart .desktop files using dex. See also
@@ -50,17 +39,14 @@ exec --no-startup-id dex --autostart --environment i3
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
-# NetworkManager is the most popular way to manage wireless networks on Linux,
-# and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
-
 # Set XDG_CONFIG_HOME for the session
 exec --no-startup-id sh -c 'export XDG_CONFIG_HOME="$HOME/.config"'
+
 # Start SSH agent component of gnome-keyring
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
 
 # wallpaper
-# exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
+exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
 
 ### Key bindings
 #
@@ -71,24 +57,15 @@ exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secr
     bindsym $mod+Shift+bracketright exec 1password --quick-access
     # Start a terminal
     bindsym $mod+Return exec $term
-    # Start a floating terminal (example)
-    # for_window [title="float"] floating enable
-    # bindsym $mod+Shift+Return exec $term --title float
-
-
 
     # floating ai terminal
     # for_window [title="ai"] floating enable, resize set width 800 px height 600 px
     bindsym $mod+Shift+bracketleft exec $term --title ai -e zsh -ic 'aichat --session temp'
 
-    for_window [title="Lovely 0.7.1"] move container to workspace number 9
-
     # Quick screenshot via maim and slurp (X11 equivalents of grim/slurp), Rofi
     # You'll need to install maim and slurp (slurp is for selection, optional for full screen)
     # Screenshot to file with prompt
     bindsym $mod+Shift+g exec --no-startup-id ~/.local/bin/screenshot.sh
-
-
 
     # Quick screenshot to clipboard
     bindsym $mod+p exec --no-startup-id maim -s -u | xclip -selection clipboard -t image/png
@@ -108,18 +85,11 @@ exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secr
     # Open Neovim in an interactive zsh shell to apply base16 theme from zshrc
     bindsym $mod+Shift+v exec $term -e zsh -ic 'nvim'
 
-
-    # Open balatro
-    bindsym $mod+Shift+d exec steam steam://rungameid/2379780
-
-    # Emoji picker (using rofi)
-    # You might need to install a rofi emoji plugin or script, e.g., rofi-emoji
+    # Emoji picker
     bindsym $mod+period exec rofimoji
 
-    # Start Chrome/Chromium/Firefox
+    # Start Browser
     bindsym $mod+b exec --no-startup-id ~/.local/bin/launch-browser.sh
-
-
 
     # Reload the configuration file
     bindsym $mod+Shift+c reload
@@ -127,6 +97,7 @@ exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secr
     bindsym $mod+Shift+r restart
     # Exit i3 (logs you out of your X session)
     bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
 #
 # Moving around:
 #
@@ -141,6 +112,14 @@ exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secr
     bindsym $mod+Shift+$down move down 50px
     bindsym $mod+Shift+$up move up 50px
     bindsym $mod+Shift+$right move right 50px
+
+#
+# Custom Window Rules
+#
+for_window [class="Blueman-manager"] floating enable
+for_window [class="Blueman-manager"] move position center
+
+
 #
 # Workspaces:
 # Define names for default workspaces (optional but good practice)
@@ -180,13 +159,11 @@ set $ws10 10
 #
 # Layout stuff:
 #
-    # split in horizontal orientation
+    # split window horiz/vert
     bindsym $mod+z split h
-
-    # split in vertical orientation - Sway used splitv, i3 uses split v
     bindsym $mod+v split v
 
-    # Switch the current container between different layout styles
+    # change layout styles
     bindsym $mod+s layout stacking
     bindsym $mod+w layout tabbed
     bindsym $mod+e layout toggle split
@@ -194,16 +171,16 @@ set $ws10 10
     # Make the current focus fullscreen
     bindsym $mod+f fullscreen toggle
 
-    # Toggle the current focus between tiling and floating mode
+    # toggle floating
     bindsym $mod+Shift+space floating toggle
 
     # Swap focus between the tiling area and the floating area
     bindsym $mod+space focus mode_toggle
 
-    # Move focus to the parent container
+    # Focus the parent container
     bindsym $mod+a focus parent
 
-    # Move focus to the child container
+    # Focus the child container
     bindsym $mod+Shift+a focus child
 
 #
@@ -224,20 +201,12 @@ mode "resize" {
     bindsym $up resize shrink height 50 px or 5 ppt
     bindsym $right resize grow width 50 px or 5 ppt
 
-    # Arrow keys as an alternative
-    bindsym Left resize shrink width 50 px or 5 ppt
-    bindsym Down resize grow height 50 px or 5 ppt
-    bindsym Up resize shrink height 50 px or 5 ppt
-    bindsym Right resize grow width 50 px or 5 ppt
-
     # Return to default mode
     bindsym Return mode "default"
     bindsym Escape mode "default"
     bindsym $mod+r mode "default"
 }
 bindsym $mod+r mode "resize"
-
-bindsym $mod+c exec --no-startup-id /home/jm/.local/bin/autoclicker
 
 bindsym $mod+t sticky toggle
 #
@@ -254,28 +223,11 @@ bindsym $mod+t sticky toggle
     bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 5%+
     # Special key to take a screenshot (full screen with maim)
     bindsym Print exec --no-startup-id maim -s ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
-    # bindsym KP_9 exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
-    # bindsym KP_6 exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
     bindsym KP_9 exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
     bindsym KP_6 exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
-    bindsym KP_Prior exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
-    bindsym KP_Right exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
 
 
 bar {
     status_command i3status
-    # i3bar_command i3bar -t
     position top
-    # separator_symbol "::"
-    # tray_padding 4
-    # colors {
-    #     background #00000000
-    #     statusline #ffffff
-    #     separator  #aaaaaacc
-    #
-    #     focused_workspace  #ffffffcc #ffffffcc #000000
-    #     active_workspace   #000000cc #000000cc #ffffff
-    #     inactive_workspace #000000cc #000000cc #ffffff
-    #     urgent_workspace   #ff0000 #ff0000 #ffffff
-    # }
 }
