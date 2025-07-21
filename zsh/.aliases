@@ -36,3 +36,4 @@ alias v="nvim ."
 alias s="kitten ssh"
 alias grep='grep --color=auto'
 
+alias aider='aider --no-attribute-author --no-attribute-committer'
