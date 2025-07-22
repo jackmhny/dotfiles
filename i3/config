@@ -85,6 +85,9 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
     # Open Neovim in an interactive zsh shell to apply base16 theme from zshrc
     bindsym $mod+Shift+v exec $term -e zsh -ic 'nvim'
 
+    # Open Neovim with Snacks smart picker (<leader><space>)
+    bindsym $mod+Shift+s exec $term -e zsh -ic 'nvim +"lua Snacks.picker.smart()"'
+
     # Emoji picker
     bindsym $mod+period exec rofimoji
 
