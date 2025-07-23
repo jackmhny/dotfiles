@@ -2,7 +2,7 @@
 set $mod Mod4
 
 # Font for window titles.
-font pango:TerminessNerdFontMono 15
+font pango:TerminessNerdFontPropo 13
 
 gaps inner 4
 gaps outer 2
