@@ -118,6 +118,8 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
 #
 for_window [class="Blueman-manager"] floating enable
 for_window [class="Blueman-manager"] move position center
+for_window [class="pavucontrol"] floating enable
+for_window [class="pavucontrol"] move position center
 
 
 #
