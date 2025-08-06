@@ -82,7 +82,7 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
     bindsym $mod+shift+w exec $file-manager
     bindsym $mod+shift+y exec $term-file-manager
 
-    # Open Neovim in an interactive zsh shell to apply base16 theme from zshrc
+    # Open Neovim in an interactive zsh shell
     bindsym $mod+Shift+v exec $term -e zsh -ic 'nvim'
 
     # Open Neovim with Snacks smart picker (<leader><space>)

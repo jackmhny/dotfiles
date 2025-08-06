@@ -4,8 +4,6 @@ vim.opt.title = true
 vim.opt.titlestring = "%{expand('%:p:~')} - nvim"
 vim.o.guifont = "Terminess Nerd Font Mono,Noto Color Emoji:h13"
 
--- Set default colorscheme
-vim.cmd.colorscheme('retrobox')
 
 
 
