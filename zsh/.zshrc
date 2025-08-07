@@ -128,6 +128,10 @@ if [ -f '/home/jm/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/jm/googl
 
 setopt interactivecomments
 
+0x0_secret() {
+    curl -F "file=@${1:--}" -F "secret=" https://0x0.st
+}
+
 0x0() {
     curl -F "file=@${1:--}" https://0x0.st
 }
