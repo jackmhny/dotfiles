@@ -1,5 +1,3 @@
--- Enable line numbers
-vim.opt.number = true
 
 -- Tab settings
 vim.opt.tabstop = 4        -- Number of spaces a tab counts for
@@ -17,3 +15,15 @@ vim.opt.listchars = {
     precedes = '◂',
     nbsp = '␣',
 }
+
+vim.opt.relativenumber = true
+vim.opt.cursorline = true
+
+local group = vim.api.nvim_create_augroup('JvimHighlights', { clear = true })
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  group = group,
+  callback = function()
+    vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#ff7777" })
+  end,
+})
