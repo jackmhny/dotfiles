@@ -154,4 +154,4 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
 fi
 ssh-add ~/.ssh/mykey 2>/dev/null
 
-export MANPAGER="nvim +Man!"
+# export MANPAGER="nvim +Man!"
