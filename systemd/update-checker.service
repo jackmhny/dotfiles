@@ -1,0 +1,6 @@
+[Unit]
+Description=Check for Arch Linux updates
+
+[Service]
+Type=oneshot
+ExecStart=/home/jm/dotfiles/scripts/update-checker.sh
