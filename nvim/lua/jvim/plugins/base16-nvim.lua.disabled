@@ -4,6 +4,7 @@ return {
   priority = 1000,
   config = function()
     vim.g.base16colorspace = 256
-    vim.cmd.colorscheme("base16-default-dark")
+    -- vim.cmd.colorscheme("base16-default-dark")
+    vim.cmd.colorscheme("base16-onedark-dark")
   end
 }

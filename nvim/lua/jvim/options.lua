@@ -1,3 +1,4 @@
+vim.opt.termguicolors = false
 
 -- Tab settings
 vim.opt.tabstop = 4        -- Number of spaces a tab counts for
@@ -18,7 +19,6 @@ vim.opt.listchars = {
 
 vim.opt.relativenumber = true
 vim.opt.number = true
-vim.opt.cursorline = true
 
 local group = vim.api.nvim_create_augroup('JvimHighlights', { clear = true })
 vim.api.nvim_create_autocmd("ColorScheme", {
