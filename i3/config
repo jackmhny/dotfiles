@@ -39,6 +39,14 @@ exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secr
 # wallpaper
 exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
 
+# run update checker script (old - backup)
+# exec --no-startup-id /home/jm/dotfiles/scripts/update-checker.sh
+# exec --no-startup-id systemctl --user start update-checker.timer
+
+# update check
+exec --no-startup-id bash -c "if [ -x /home/jm/dotfiles/scripts/update-checker.sh ]; then /home/jm/dotfiles/scripts/update-checker.sh; fi"
+exec --no-startup-id bash -c "if systemctl --user status update-checker.timer &>/dev/null; then systemctl --user start update-checker.timer; fi"
+
 ### Key bindings
 #
 # Basics:
