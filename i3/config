@@ -2,12 +2,8 @@
 set $mod Mod4
 
 # Font for window titles.
-font pango:TerminessNerdFontPropo 13
+font pango:TerminessNerdFontPropo 21
 
-gaps inner 4
-gaps outer 2
-
-for_window [class=".*"] border pixel 2
 
 floating_modifier $mod
 
