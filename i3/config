@@ -21,6 +21,7 @@ set $term-file-manager kitty -e yazi
 
 # start the compositor
 # exec --no-startup-id picom -b --no-fading-openclose --fade-in-step=1 --fade-out-step=1 --fade-delta=0 --backend glx
+exec --no-startup-id xrandr --dpi 120
 
 # notifyer
 exec --no-startup-id dunst
