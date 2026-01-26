@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+sessions=$(opencode session list 2>/dev/null | tail -n +3 | head -10)
+
+if [ -z "$sessions" ]; then
+    notify-send "OpenCode" "No recent sessions found"
+    exit 0
+fi
+
+formatted=$(echo "$sessions" | while IFS= read -r line; do
+    id="${line%% *}"
+    title="${line#* }"
+    title="${title#* }"
+    echo "$title"
+done)
+
+selected=$(echo "$formatted" | rofi -dmenu -p "OpenCode" -format "i" -no-custom -width 600)
+
+if [ -n "$selected" ]; then
+    session_id=$(echo "$sessions" | sed -n "$((selected + 1))p" | awk '{print $1}')
+    exec opencode --session "$session_id"
+fi

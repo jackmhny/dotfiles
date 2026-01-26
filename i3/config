@@ -72,11 +72,14 @@ exec --no-startup-id bash -c "if systemctl --user status update-checker.timer &>
     bindsym $mod+backslash exec 1password
     # bindsym $mod+Shift+bracketright exec 1password --quick-access
 
-    # floating ai terminal
-    # for_window [title="ai"] floating enable, resize set width 800 px height 600 px
-    bindsym $mod+Shift+bracketleft exec $term --title ai -e zsh -ic 'aichat --session temp'
 
-    # file manager
+    # AI
+    # New chat session (fresh workspace)
+    bindsym $mod+Shift+bracketleft exec --no-startup-id kitty --title oc-chat -e oc-chat
+    # Recent sessions
+    bindsym $mod+Shift+bracketright exec --no-startup-id oc-recent
+
+
     bindsym $mod+shift+w exec $file-manager
     bindsym $mod+shift+y exec $term-file-manager
 

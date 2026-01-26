@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+base="$HOME/dev/oc-chat/sessions"
+dir="$base/$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$dir"
+cd "$dir"
+exec opencode --agent chat
+

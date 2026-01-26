@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${1:-}" == "-t" ]]; then
+    session="oc-$(date +%H%M%S)"
+    tmux new-session -d -s "$session" "opencode"
+    exec tmux attach-session -t "$session"
+else
+    exec opencode
+fi
