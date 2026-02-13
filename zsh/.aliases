@@ -11,8 +11,6 @@ alias vi='nvim'
 alias vim='nvim'
 # aichat alias
 alias ai='aichat --session temp'
-# aider alias
-alias aider1='aider --architect --model r1 --editor-model sonnet'
 # lazygit alias
 alias lg="lazygit"
 alias fzvim='fzf \
@@ -35,7 +33,5 @@ alias nvm="fnm"
 alias v="nvim ."
 alias s="kitten ssh"
 alias grep='grep --color=auto'
-
-alias aider='aider --no-attribute-author --no-attribute-committer'
 
 alias 180hz='xrandr --output DP-0 --mode 2560x1440 --rate 180.00'
