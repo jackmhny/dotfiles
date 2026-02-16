@@ -94,12 +94,12 @@ _sgpt_zsh() {
         _sgpt_prev_cmd=$BUFFER
         BUFFER+=" ⌛"
         zle -I && zle redisplay
-        BUFFER=$(sgpt --shell "$_sgpt_prev_cmd" --no-interaction)
+        BUFFER=$(uv tool run shell-gpt -- --shell "$_sgpt_prev_cmd" --no-interaction)
         zle end-of-line
     fi
 }
 zle -N _sgpt_zsh
-bindkey '^[o' _sgpt_zsh  # Alt+L to trigger shell-gpt suggestions
+bindkey '^[o' _sgpt_zsh  # Alt+O to trigger shell-gpt suggestions
 
 # Fuzzy directory navigation
 fcd() {
