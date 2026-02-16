@@ -1,5 +1,8 @@
 vim.opt.termguicolors = false
 
+-- Clipboard support
+vim.opt.clipboard = "unnamedplus"
+
 -- Tab settings
 vim.opt.tabstop = 4        -- Number of spaces a tab counts for
 vim.opt.shiftwidth = 4     -- Number of spaces for auto-indent
@@ -28,3 +31,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#ff7777" })
   end,
 })
+
+vim.keymap.set("n", "<Space>cf", function() vim.fn.setreg("+", vim.fn.expand("%:t")) end, { desc = "Copy filename to clipboard" })
+vim.keymap.set("n", "<Space>cp", function() vim.fn.setreg("+", vim.fn.expand("%:p")) end, { desc = "Copy full path to clipboard" })

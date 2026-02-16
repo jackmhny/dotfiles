@@ -10,6 +10,8 @@ return {
         mode = { "n", "v" },
         { "<leader><tab>", group = "tabs" },
         { "<leader>c", group = "code" },
+        { "<Space>cf", desc = "Copy filename to clipboard" },
+        { "<Space>cp", desc = "Copy full path to clipboard" },
         { "<leader>d", group = "debug" },
         { "<leader>dp", group = "profiler" },
         { "<leader>f", group = "file/find" },
