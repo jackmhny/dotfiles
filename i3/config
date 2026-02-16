@@ -2,7 +2,7 @@
 set $mod Mod4
 
 # Font for window titles.
-font pango:TerminessNerdFontPropo 13
+font pango:TerminessNerdFontPropo 18
 
 
 floating_modifier $mod
@@ -26,15 +26,15 @@ exec --no-startup-id xrandr --dpi 120
 # notifyer
 exec --no-startup-id dunst
 
+# greenclip clipboard manager (keeps clipboard after closing windows)
+exec --no-startup-id greenclip daemon
+
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 # Set XDG_CONFIG_HOME for the session
 exec --no-startup-id sh -c 'export XDG_CONFIG_HOME="$HOME/.config"'
-
-# Start SSH agent component of gnome-keyring
-exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
 
 # wallpaper
 exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
@@ -92,6 +92,9 @@ exec --no-startup-id bash -c "if systemctl --user status update-checker.timer &>
     # emoji picker
     bindsym $mod+period exec rofimoji
 
+    # clipboard history picker
+    bindsym $mod+c exec rofi -modi "clipboard:greenclip print" -show clipboard
+
     # browser
     bindsym $mod+b exec --no-startup-id ~/.local/bin/launch-browser.sh
 
@@ -99,6 +102,7 @@ exec --no-startup-id bash -c "if systemctl --user status update-checker.timer &>
     # Screenshot binds
     #
         bindsym Print exec --no-startup-id maim -s ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
+        bindsym Shift+Print exec --no-startup-id maim ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
 
         # screenshot script (requires maim, slurp, rofi)
         bindsym $mod+Shift+g exec --no-startup-id ~/.local/bin/screenshot.sh
