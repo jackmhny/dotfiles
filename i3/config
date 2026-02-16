@@ -2,7 +2,7 @@
 set $mod Mod4
 
 # Font for window titles.
-font pango:TerminessNerdFontPropo 18
+font pango:TerminessNerdFontPropo 13
 
 
 floating_modifier $mod
@@ -35,6 +35,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 # Set XDG_CONFIG_HOME for the session
 exec --no-startup-id sh -c 'export XDG_CONFIG_HOME="$HOME/.config"'
+
+# Host-specific overrides (not tracked)
+include ~/.config/i3/config.local
 
 # wallpaper
 exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
