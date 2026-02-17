@@ -7,20 +7,11 @@ return {
     ---@module 'avante'
     ---@type avante.Config
     opts = {
-      provider = "claude",
+      provider = "openrouter",
       providers = {
-        claude = {
-          endpoint = "https://api.anthropic.com",
-          model = "claude-sonnet-4-20250514",
-          timeout = 30000, -- Timeout in milliseconds
-            extra_request_body = {
-              temperature = 0.75,
-              max_tokens = 20480,
-            },
-        },
-        moonshot = {
-          endpoint = "https://api.moonshot.ai/v1",
-          model = "kimi-k2-0711-preview",
+        openrouter = {
+          endpoint = "https://openrouter.ai/api/v1",
+          model = "moonshotai/kimi-k2.5",
           timeout = 30000, -- Timeout in milliseconds
           extra_request_body = {
             temperature = 0.75,
