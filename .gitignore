@@ -11,3 +11,9 @@ opencode/bun.lock
 opencode/.gitignore
 opencode/antigravity-signature-cache.json
 opencode/antigravity-logs/
+opencode/opencode.json.bak-*
+opencode/package-lock.json
+opencode/antigravity-accounts.json.*.tmp
+install.sh
+qutebrowser/qsettings/
+qutebrowser/userscripts/.git

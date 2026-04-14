@@ -11,6 +11,10 @@ alias vi='nvim'
 alias vim='nvim'
 # aichat alias
 alias ai='aichat --session temp'
+# OpenCode aliases
+function mm {
+    opencode run -m opencode/minimax-m2.5-free "$@"
+}
 # lazygit alias
 alias lg="lazygit"
 alias fzvim='fzf \
@@ -35,3 +39,5 @@ alias s="kitten ssh"
 alias grep='grep --color=auto'
 
 alias 180hz='xrandr --output DP-0 --mode 2560x1440 --rate 180.00'
+# Claude with skip permissions
+alias clauded='claude --dangerously-skip-permissions'

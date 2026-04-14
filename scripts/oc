@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+MODEL="openrouter/minimax/minimax-m2.7"
+
 if [[ "${1:-}" == "-t" ]]; then
     session="oc-$(date +%H%M%S)"
-    tmux new-session -d -s "$session" "opencode"
+    tmux new-session -d -s "$session" "opencode -m $MODEL"
     exec tmux attach-session -t "$session"
 else
-    exec opencode
+    exec opencode -m "$MODEL" "$@"
 fi
