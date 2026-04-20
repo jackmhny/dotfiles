@@ -7,4 +7,17 @@
 config_version: 2
 settings:
   content.javascript.clipboard:
-    https://platform.claude.com: access-paste
+    https://dash.cloudflare.com: access-paste
+    https://drive.google.com: access-paste
+    https://go.dev: access-paste
+    https://openrouter.ai: access-paste
+    https://radarr.jackmhny.xyz: access-paste
+    https://sonarr.jackmhny.xyz: access-paste
+    https://sprites.dev: access-paste
+  content.notifications.enabled:
+    https://claude.ai: true
+  content.register_protocol_handler:
+    https://100.64.0.5#!/Mail/0/new?%25s: true
+    https://mail.mhny.dev#!/Mail/0/new?%25s: true
+  tabs.position:
+    global: top

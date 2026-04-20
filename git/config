@@ -31,3 +31,5 @@
 	keep-plus-minus-markers = true
 [url "ssh://aur@aur.archlinux.org/"]
 	insteadOf = https://aur.archlinux.org/
+[url "https://aur.archlinux.org/"]
+	insteadOf = aur@aur.archlinux.org:

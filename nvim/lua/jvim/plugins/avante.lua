@@ -10,6 +10,8 @@ return {
       provider = "openrouter",
       providers = {
         openrouter = {
+          __inherited_from = "openai",
+          api_key_name = "OPENROUTER_API_KEY",
           endpoint = "https://openrouter.ai/api/v1",
           model = "moonshotai/kimi-k2.5",
           timeout = 30000, -- Timeout in milliseconds

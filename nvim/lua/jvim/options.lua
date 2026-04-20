@@ -1,7 +1,7 @@
 vim.opt.termguicolors = false
 
 -- Clipboard support
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 
 -- Tab settings
 vim.opt.tabstop = 4        -- Number of spaces a tab counts for

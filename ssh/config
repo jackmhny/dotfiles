@@ -15,10 +15,9 @@ Host NZXT
     IdentityFile ~/.ssh/mykey
 
 Host lg
-    HostName 192.168.1.42
+    HostName 100.64.0.3
     User jackmhny
     IdentityFile ~/.ssh/mykey
-    Port 22
 
 Host lg-ngrok
     Hostname 6.tcp.us-cal-1.ngrok.io
@@ -38,3 +37,32 @@ Host alien
 
 Host rpi5
     HostName 192.168.1.60
+
+Host lgheadcutoff
+    User jackmhny
+    IdentityFile ~/.ssh/mykey
+
+Host coding2
+    User jackmahoney
+    HostName coding2.ecs.csus.edu
+    IdentityFile ~/.ssh/mykey
+
+Host kingchud
+    user jackmhny
+    Hostname 209.145.51.192
+    IdentityFile ~/.ssh/mykey
+
+Host heavy
+    user jackmhny
+    Hostname 209.145.51.192
+    IdentityFile ~/.ssh/mykey
+
+Host soldier
+    user jackmhny
+    Hostname 100.64.0.5
+    IdentityFile ~/.ssh/mykey
+    
+Host demo
+    user jackmhny
+    IdentityFile ~/.ssh/mykey
+

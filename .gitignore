@@ -17,3 +17,4 @@ opencode/antigravity-accounts.json.*.tmp
 install.sh
 qutebrowser/qsettings/
 qutebrowser/userscripts/.git
+qutebrowser/userscripts/pass.env

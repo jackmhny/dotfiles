@@ -156,3 +156,5 @@ fi
 ssh-add ~/.ssh/mykey 2>/dev/null
 
 # export MANPAGER="nvim +Man!"
+
+eval "$(zoxide init zsh)"
