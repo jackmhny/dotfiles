@@ -3,6 +3,7 @@
 order += "ethernet tailscale0"
 order += "wireless _first_"
 order += "read_file updates"
+order += "read_file codex_usage"
 order += "cpu_temperature 0"
 order += "disk /"
 order += "memory"
@@ -59,5 +60,10 @@ volume master {
 }
 
 read_file updates {
-    path = "/tmp/pacman-updates"
+    path = "/home/jm/.cache/i3status/updates"
+}
+
+read_file codex_usage {
+    path = "/home/jm/.cache/i3status/codex-usage"
+    color_good = "#7AA2F7"
 }

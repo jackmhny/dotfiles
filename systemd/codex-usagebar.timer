@@ -1,0 +1,10 @@
+[Unit]
+Description=Run codex-usagebar.service every 2 minutes
+
+[Timer]
+OnBootSec=45s
+OnUnitActiveSec=2min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target

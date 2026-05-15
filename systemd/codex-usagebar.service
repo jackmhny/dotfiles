@@ -1,0 +1,6 @@
+[Unit]
+Description=Refresh Codex usage status for i3status
+
+[Service]
+Type=oneshot
+ExecStart=/home/jm/dotfiles/scripts/codex-usagebar --quiet
