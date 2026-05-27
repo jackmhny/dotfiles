@@ -19,8 +19,6 @@ set $term-file-manager kitty -e yazi
 
 # Autostart applications
 
-# start the compositor
-# exec --no-startup-id picom -b --no-fading-openclose --fade-in-step=1 --fade-out-step=1 --fade-delta=0 --backend glx
 exec --no-startup-id xrandr --dpi 120
 
 # notifyer
@@ -66,14 +64,6 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
     # 1Password shortcuts
     bindsym $mod+backslash exec 1password
     # bindsym $mod+Shift+bracketright exec 1password --quick-access
-
-
-    # AI
-    # New chat session (fresh workspace)
-    bindsym $mod+Shift+bracketleft exec --no-startup-id kitty --title oc-chat -e oc-chat
-    # Recent sessions
-    bindsym $mod+Shift+bracketright exec --no-startup-id oc-recent
-
 
     bindsym $mod+shift+w exec $file-manager
     bindsym $mod+shift+y exec $term-file-manager
