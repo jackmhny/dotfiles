@@ -1,8 +1,8 @@
 # jackmhny i3status
 
+order += "read_file codex_usage"
 order += "ethernet tailscale0"
 order += "wireless _first_"
-order += "read_file codex_usage"
 order += "cpu_temperature 0"
 order += "disk /"
 order += "memory"
@@ -17,8 +17,8 @@ cpu_temperature 0 {
 }
 
 wireless _first_ {
-    format_up = " %ip"
-    format_down = " down"
+    format_up = "  %ip"
+    format_down = "  down"
 }
 
 ethernet _first_ {

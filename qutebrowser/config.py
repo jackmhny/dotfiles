@@ -264,7 +264,7 @@ c.fonts.default_family = 'JetBrainsMono Nerd Font'
 # either a float value with a "pt" suffix, or an integer value with a
 # "px" suffix.
 # Type: String
-c.fonts.default_size = '13px'
+c.fonts.default_size = '13pt'
 
 # Font family for standard fonts.
 # Type: FontFamily
