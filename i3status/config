@@ -1,6 +1,5 @@
 # jackmhny i3status
 
-order += "read_file updates"
 order += "cpu_temperature 0"
 order += "disk /"
 order += "memory"
@@ -51,8 +50,3 @@ volume master {
         mixer = "Master"
         mixer_idx = 0
 }
-
-read_file updates {
-    path = "/tmp/pacman-updates"
-}
-

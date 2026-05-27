@@ -42,10 +42,6 @@ include ~/.config/i3/config.local
 # wallpaper
 exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
 
-# run update checker script (old - backup)
-# exec --no-startup-id /home/jm/dotfiles/scripts/update-checker.sh
-# exec --no-startup-id systemctl --user start update-checker.timer
-
 ### Key bindings
 #
 # Basics:

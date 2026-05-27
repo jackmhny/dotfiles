@@ -2,7 +2,6 @@
 
 order += "ethernet tailscale0"
 order += "wireless _first_"
-order += "read_file updates"
 order += "read_file codex_usage"
 order += "cpu_temperature 0"
 order += "disk /"
@@ -57,10 +56,6 @@ volume master {
         device = "default"
         mixer = "Master"
         mixer_idx = 0
-}
-
-read_file updates {
-    path = "/home/jm/.cache/i3status/updates"
 }
 
 read_file codex_usage {
