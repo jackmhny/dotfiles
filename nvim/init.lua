@@ -2,7 +2,7 @@ require("jvim")
 
 vim.opt.title = true
 vim.opt.titlestring = "%{expand('%:p:~')} - nvim"
-vim.o.guifont = "Terminus (TTF):h10.2:#e-alias"
+vim.o.guifont = "IBM Plex Mono:h11"
 
 
 
@@ -17,4 +17,3 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.expandtab = true
   end,
 })
-
