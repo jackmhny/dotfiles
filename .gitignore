@@ -16,5 +16,6 @@ opencode/package-lock.json
 opencode/antigravity-accounts.json.*.tmp
 install.sh
 qutebrowser/qsettings/
+qutebrowser/autoconfig.yml
 qutebrowser/userscripts/.git
 qutebrowser/userscripts/pass.env
