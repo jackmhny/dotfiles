@@ -60,4 +60,5 @@ volume master {
 
 read_file codex_usage {
     path = "~/.cache/i3status/codex-usage"
+    color_good = "#a9b1d6"
 }
