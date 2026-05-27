@@ -7,13 +7,8 @@ url=https://chatgpt.com/backend-api/wham/usage
 icon=''
 
 bar_width=14
-block='█'
-esc=$(printf '\033')
-color_red="${esc}[38;5;203m"
-color_yellow="${esc}[38;5;221m"
-color_green="${esc}[38;5;120m"
-color_bg="${esc}[48;5;236m"
-color_reset="${esc}[0m"
+filled_block='█'
+empty_block='░'
 
 err() {
     mkdir -p "${out%/*}"
@@ -38,17 +33,6 @@ reset_time() {
     fi
 }
 
-usage_color() {
-    left=$1
-    if [ "$left" -le 20 ]; then
-        printf '%s' "$color_red"
-    elif [ "$left" -le 50 ]; then
-        printf '%s' "$color_yellow"
-    else
-        printf '%s' "$color_green"
-    fi
-}
-
 usage_bar() {
     left=$1
     filled=$((left * bar_width / 100))
@@ -57,17 +41,16 @@ usage_bar() {
 
     i=0
     bar=''
-    color=$(usage_color "$left")
     while [ "$i" -lt "$bar_width" ]; do
         if [ "$i" -lt "$filled" ]; then
-            bar="${bar}${color}${block}"
+            bar="${bar}${filled_block}"
         else
-            bar="${bar}${color_bg}${block}"
+            bar="${bar}${empty_block}"
         fi
         i=$((i + 1))
     done
 
-    printf '%s%s' "$bar" "$color_reset"
+    printf '%s' "$bar"
 }
 
 window() {
