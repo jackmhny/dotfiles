@@ -59,6 +59,6 @@ volume master {
 }
 
 read_file codex_usage {
-    path = "/home/jm/.cache/i3status/codex-usage"
+    path = "~/.cache/i3status/codex-usage"
     color_good = "#7AA2F7"
 }

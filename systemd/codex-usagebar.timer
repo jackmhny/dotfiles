@@ -1,10 +1,11 @@
 [Unit]
-Description=Run codex-usagebar.service every 2 minutes
+Description=Refresh Codex usage status for i3status
 
 [Timer]
-OnBootSec=45s
-OnUnitActiveSec=2min
-AccuracySec=30s
+OnBootSec=30s
+OnUnitActiveSec=60s
+AccuracySec=10s
+Unit=codex-usagebar.service
 
 [Install]
 WantedBy=timers.target

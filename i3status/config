@@ -6,6 +6,7 @@ order += "memory"
 order += "volume master"
 order += "battery 0"
 order += "wireless _first_"
+order += "read_file codex_usage"
 # order += "ethernet _first_"
 order += "tztime local"
 
@@ -49,4 +50,9 @@ volume master {
         device = "default"
         mixer = "Master"
         mixer_idx = 0
+}
+
+read_file codex_usage {
+    path = "~/.cache/i3status/codex-usage"
+    color_good = "#7AA2F7"
 }
