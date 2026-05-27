@@ -1028,7 +1028,7 @@ c.colors.webpage.darkmode.enabled = False
 # font setting, it's replaced with the fonts listed here. If set to an
 # empty value, a system-specific monospace default is used.
 # Type: List of Font, or Font
-c.fonts.default_family = 'IBM Plex Sans'
+c.fonts.default_family = 'JetBrainsMono Nerd Font'
 
 # Default font size to use. Whenever "default_size" is used in a font
 # setting, it's replaced with the size listed here. Valid values are
@@ -1039,19 +1039,19 @@ c.fonts.default_size = '13px'
 
 # Font family for standard fonts.
 # Type: FontFamily
-c.fonts.web.family.standard = 'IBM Plex Sans'
+c.fonts.web.family.standard = 'JetBrainsMono Nerd Font'
 
 # Font family for serif fonts.
 # Type: FontFamily
-c.fonts.web.family.serif = 'IBM Plex Serif'
+c.fonts.web.family.serif = 'JetBrainsMono Nerd Font'
 
 # Font family for sans-serif fonts.
 # Type: FontFamily
-c.fonts.web.family.sans_serif = 'IBM Plex Sans'
+c.fonts.web.family.sans_serif = 'JetBrainsMono Nerd Font'
 
 # Font family for fixed fonts.
 # Type: FontFamily
-c.fonts.web.family.fixed = 'IBM Plex Mono'
+c.fonts.web.family.fixed = 'JetBrainsMono Nerd Font'
 
 # Bindings for normal mode
 config.bind(',d', 'set -u {url} colors.webpage.darkmode.enabled true')

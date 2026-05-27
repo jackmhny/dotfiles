@@ -22,7 +22,7 @@
     selected-normal-foreground:  var(lightbg);
     active-foreground:           var(blue);
     background:                  rgba ( 0, 0, 0, 100 % );
-    font:                        "IBM Plex Sans 14";
+    font:                        "JetBrainsMono Nerd Font 14";
     selected-active-background:  var(blue);
     active-background:           var(background);
     selected-normal-background:  var(lightfg);

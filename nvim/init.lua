@@ -2,7 +2,7 @@ require("jvim")
 
 vim.opt.title = true
 vim.opt.titlestring = "%{expand('%:p:~')} - nvim"
-vim.o.guifont = "IBM Plex Mono:h11"
+vim.o.guifont = "JetBrainsMono Nerd Font:h11"
 
 
 

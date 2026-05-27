@@ -2,7 +2,7 @@
 set $mod Mod4
 
 # Font for window titles.
-font pango:IBM Plex Sans 13
+font pango:JetBrainsMono Nerd Font 13
 
 
 floating_modifier $mod
