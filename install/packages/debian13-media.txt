@@ -1,0 +1,7 @@
+# Media/scraping helpers.
+mpv
+ffmpeg
+yt-dlp
+gallery-dl
+imagemagick
+flameshot

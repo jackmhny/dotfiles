@@ -1,0 +1,11 @@
+# AI/agent CLI support. Vendor-specific tools stay optional in install.py --external.
+uv
+pipx
+python3-venv
+python3-dev
+nodejs
+npm
+jq
+fzf
+ripgrep
+tmux
