@@ -64,7 +64,6 @@ DOTLINKS: list[tuple[str, str]] = [
     ("tmux", ".config/tmux"),
     ("zsh", ".config/zsh"),
     ("applications/helium-laptop-audio.desktop", ".local/share/applications/helium-laptop-audio.desktop"),
-    ("applications/fix-deskflow-buttons.desktop", ".config/autostart/fix-deskflow-buttons.desktop"),
     ("chrome-flags.conf", ".config/chrome-flags.conf"),
     ("dunst", ".config/dunst"),
     ("sunshine/apps.json", ".config/sunshine/apps.json"),
@@ -80,6 +79,10 @@ DOTLINKS: list[tuple[str, str]] = [
 PRIVATE_DOTLINKS: list[tuple[str, str]] = [
     ("ssh/config", ".ssh/config"),
     ("git/config", ".config/git/config"),
+]
+
+DESKFLOW_FIX_LINKS: list[tuple[str, str]] = [
+    ("applications/fix-deskflow-buttons.desktop", ".config/autostart/fix-deskflow-buttons.desktop"),
 ]
 
 USER_SYSTEMD_UNITS = [
@@ -126,6 +129,7 @@ class Context:
     force: bool
     skip_apt: bool
     link_private: bool
+    deskflow_fix: bool
     configure_apt_sources: bool
     external: bool
     chsh: bool
@@ -411,6 +415,11 @@ def link_dotfiles(ctx: Context) -> None:
     else:
         warn("skipping ssh/config and git/config; pass --link-private to link personal/host-specific files")
 
+    if ctx.deskflow_fix:
+        note("linking opt-in Deskflow XTEST button workaround")
+        for src_rel, dest_rel in DESKFLOW_FIX_LINKS:
+            link_one(ctx, src_rel, dest_rel)
+
     link_scripts(ctx)
     setup_user_systemd(ctx)
 
@@ -562,7 +571,10 @@ def print_summary(profiles: list[str], groups: list[str], ctx: Context) -> None:
     print(f"profiles:    {', '.join(profiles)}")
     print(f"pkg groups:  {', '.join(groups)}")
     print(f"apt pkgs:    {len(packages)} names before availability filtering")
-    print(f"dotfiles:    public links + {'private links' if ctx.link_private else 'no private links'}")
+    extras = ["public links"]
+    extras.append("private links" if ctx.link_private else "no private links")
+    extras.append("Deskflow button fix" if ctx.deskflow_fix else "no Deskflow button fix")
+    print(f"dotfiles:    {', '.join(extras)}")
     print(f"system cfgs: {'desktop Xorg/libinput config' if 'desktop-i3' in groups else 'none'}")
     print("user timers: codex-usagebar.timer")
     print(f"apt source:  {'write Debian trixie sources' if ctx.configure_apt_sources else 'leave existing apt sources alone'}")
@@ -584,6 +596,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--skip-apt", action="store_true", help="do not install apt packages")
     parser.add_argument("--no-link", action="store_true", help="do not symlink dotfiles")
     parser.add_argument("--link-private", action="store_true", help="also link ssh/config and git/config")
+    parser.add_argument("--deskflow-fix", action="store_true", help="link X11 autostart workaround for Deskflow button 8/9 remapping")
     parser.add_argument("--configure-apt-sources", action="store_true", help="write a Debian 13 deb822 sources file")
     parser.add_argument("--external", action="store_true", help="run optional curl/cargo based installers")
     parser.add_argument("--no-chsh", action="store_true", help="do not change login shell to zsh")
@@ -609,6 +622,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         force=args.force,
         skip_apt=args.skip_apt,
         link_private=args.link_private,
+        deskflow_fix=args.deskflow_fix,
         configure_apt_sources=args.configure_apt_sources,
         external=args.external,
         chsh=not args.no_chsh,
