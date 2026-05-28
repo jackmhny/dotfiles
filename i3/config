@@ -15,7 +15,6 @@ set $right l
 set $term kitty
 set $menu rofi -show drun -i
 set $file-manager thunar
-set $term-file-manager kitty -e yazi
 
 # Autostart applications
 
@@ -66,7 +65,6 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
     # bindsym $mod+Shift+bracketright exec 1password --quick-access
 
     bindsym $mod+shift+w exec $file-manager
-    bindsym $mod+shift+y exec $term-file-manager
 
     # neovim in an interactive zsh shell
     bindsym $mod+Shift+v exec $term -e zsh -ic 'nvim'
