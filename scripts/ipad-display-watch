@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export DISPLAY="${DISPLAY:-:0}"
+export XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
+
+"$HOME/bin/ipad-display-apply"
+
+xev -root -event randr |
+while IFS= read -r line; do
+  case "$line" in
+    *RRScreenChangeNotify*|*RROutputChangeNotify*|*RRNotify*)
+      sleep 1
+      "$HOME/bin/ipad-display-apply" || true
+      ;;
+  esac
+done

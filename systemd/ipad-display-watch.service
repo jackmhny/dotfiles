@@ -1,0 +1,14 @@
+[Unit]
+Description=Keep iPad dummy display layout applied
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+ExecStart=%h/bin/ipad-display-watch
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

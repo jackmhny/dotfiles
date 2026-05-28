@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export DISPLAY="${DISPLAY:-:0}"
+export XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
+
+pkill x11vnc 2>/dev/null || true
+
+"$HOME/bin/ipad-display-apply"
+
+systemctl --user daemon-reload
+systemctl --user import-environment DISPLAY XAUTHORITY
+systemctl --user restart app-dev.lizardbyte.app.Sunshine.service
+systemctl --user --no-pager --full status app-dev.lizardbyte.app.Sunshine.service

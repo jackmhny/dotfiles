@@ -1,0 +1,11 @@
+[Unit]
+Description=Receive PulseAudio-compatible audio over Tailscale
+After=pipewire-pulse.service
+
+[Service]
+ExecStart=%h/bin/laptop-audio-receiver
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

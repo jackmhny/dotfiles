@@ -1,0 +1,30 @@
+{
+  "env": {
+    "PATH": "$(PATH):$(HOME)/.local/bin"
+  },
+  "apps": [
+    {
+      "name": "iPad Desktop",
+      "image-path": "desktop.png",
+      "prep-cmd": [
+        {
+          "do": "xrandr --output HDMI-1 --mode 1280x800 --rate 59.91 --pos 0x200 --output eDP-1 --primary --mode 1920x1200 --pos 1280x0",
+          "undo": ""
+        }
+      ]
+    },
+    {
+      "name": "Steam Big Picture",
+      "detached": [
+        "setsid steam steam://open/bigpicture"
+      ],
+      "prep-cmd": [
+        {
+          "do": "xrandr --output HDMI-1 --mode 1280x800 --rate 59.91 --pos 0x200 --output eDP-1 --primary --mode 1920x1200 --pos 1280x0",
+          "undo": "setsid steam steam://close/bigpicture"
+        }
+      ],
+      "image-path": "steam.png"
+    }
+  ]
+}

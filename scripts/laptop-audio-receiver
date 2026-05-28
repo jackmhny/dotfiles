@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+module_id="$(pactl load-module module-native-protocol-tcp \
+  listen=100.64.0.9 \
+  auth-anonymous=1 \
+  auth-ip-acl=100.64.0.0/10)"
+
+cleanup() {
+  pactl unload-module "$module_id" >/dev/null 2>&1 || true
+}
+
+trap cleanup EXIT INT TERM
+
+while true; do
+  sleep 3600
+done

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PULSE_SERVER="${PULSE_SERVER:-tcp:100.64.0.9}"
+
+if command -v helium >/dev/null 2>&1; then
+  exec helium "$@"
+elif command -v Helium >/dev/null 2>&1; then
+  exec Helium "$@"
+elif command -v flatpak >/dev/null 2>&1; then
+  app_id="$(flatpak list --app --columns=application 2>/dev/null | awk 'tolower($0) ~ /helium/ { print; exit }')"
+  if [ -n "$app_id" ]; then
+    exec flatpak run "$app_id" "$@"
+  fi
+fi
+
+echo "Could not find a Helium launcher. Install Helium or edit $0 with its command." >&2
+exit 127

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+systemctl --user stop app-dev.lizardbyte.app.Sunshine.service

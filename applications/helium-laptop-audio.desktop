@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Helium (Laptop Audio)
+Comment=Run Helium with audio routed to saxtonhale over Tailscale
+Exec=helium-laptop-audio
+Terminal=false
+Categories=AudioVideo;Network;

@@ -61,8 +61,15 @@ DOTLINKS: list[tuple[str, str]] = [
     ("starship", ".config/starship"),
     ("tmux", ".config/tmux"),
     ("zsh", ".config/zsh"),
+    ("applications/helium-laptop-audio.desktop", ".local/share/applications/helium-laptop-audio.desktop"),
     ("chrome-flags.conf", ".config/chrome-flags.conf"),
     ("dunst", ".config/dunst"),
+    ("sunshine/apps.json", ".config/sunshine/apps.json"),
+    ("sunshine/sunshine.conf", ".config/sunshine/sunshine.conf"),
+    (
+        "systemd/app-dev.lizardbyte.app.Sunshine.service.d/ipad-display.conf",
+        ".config/systemd/user/app-dev.lizardbyte.app.Sunshine.service.d/ipad-display.conf",
+    ),
 ]
 
 # These are intentionally opt-in because they contain personal hosts, identity,
@@ -75,10 +82,17 @@ PRIVATE_DOTLINKS: list[tuple[str, str]] = [
 USER_SYSTEMD_UNITS = [
     "codex-usagebar.service",
     "codex-usagebar.timer",
+    "ipad-display-watch.service",
+    "laptop-audio-receiver.service",
 ]
 
 USER_SYSTEMD_TIMERS = [
     "codex-usagebar.timer",
+]
+
+USER_SYSTEMD_SERVICES = [
+    "ipad-display-watch.service",
+    "laptop-audio-receiver.service",
 ]
 
 DESKTOP_SYSTEM_CONFIGS = [
@@ -429,6 +443,8 @@ def setup_user_systemd(ctx: Context) -> None:
     run(ctx, ["systemctl", "--user", "daemon-reload"], check=False)
     for timer in USER_SYSTEMD_TIMERS:
         run(ctx, ["systemctl", "--user", "enable", "--now", timer], check=False)
+    for service in USER_SYSTEMD_SERVICES:
+        run(ctx, ["systemctl", "--user", "enable", "--now", service], check=False)
 
     # Populate read_file caches immediately instead of waiting for the first timer tick.
     run(ctx, ["systemctl", "--user", "start", "codex-usagebar.service"], check=False)
