@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Fix Deskflow XTEST Buttons
+Comment=Map Deskflow back-forward button events to horizontal scroll on X11 clients
+Exec=sh -c 'sleep 2; "$HOME/.local/bin/fix-deskflow-buttons"'
+Terminal=false
+X-GNOME-Autostart-enabled=true

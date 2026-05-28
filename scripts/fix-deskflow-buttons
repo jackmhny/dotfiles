@@ -1,0 +1,31 @@
+#!/bin/sh
+# Remap Deskflow/XTEST back-forward button events to horizontal scroll.
+
+dev=${DESKFLOW_XTEST_POINTER:-Virtual core XTEST pointer}
+
+command -v xinput >/dev/null 2>&1 || exit 0
+
+map=$(xinput get-button-map "$dev" 2>/dev/null) || exit 0
+set -- $map
+
+[ "$#" -ge 9 ] || exit 0
+
+out=
+i=1
+for button in "$@"; do
+  case "$i" in
+    6|7)
+      button=0
+      ;;
+    8)
+      button=6
+      ;;
+    9)
+      button=7
+      ;;
+  esac
+  out="$out $button"
+  i=$((i + 1))
+done
+
+xinput set-button-map "$dev" $out

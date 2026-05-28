@@ -33,6 +33,7 @@ Useful variants:
 - For the `desktop-i3` profile, installs the Xorg/libinput touchpad config into `/etc/X11/xorg.conf.d/40-libinput.conf`, backing up any existing file first. This enables natural scrolling and tap-to-click.
 - Links dotfiles into XDG locations, backing up pre-existing files as `*.backup-YYYYMMDD-HHMMSS`.
 - Links all files in `scripts/` into `~/.local/bin`.
+- Links `fix-deskflow-buttons.desktop` into `~/.config/autostart` so X11 clients remap Deskflow/XTEST button `8/9` events back to horizontal scroll `6/7`.
 - Links user systemd units into `~/.config/systemd/user`, reloads the user manager, enables `codex-usagebar.timer`, and runs `codex-usagebar.service` once to populate the i3status cache.
 - Creates Debian command-name shims where needed, especially `fd -> fdfind` and `bat -> batcat`.
 - Creates `~/.config/i3/config.local`, because the i3 config includes that path.
@@ -52,6 +53,7 @@ The current dotfiles still contain a few Arch-flavored assumptions. This install
 
 - Debian's `fd-find` package installs `fdfind`; the installer creates `~/.local/bin/fd`.
 - Debian's `bat` package may install `batcat`; the installer creates `~/.local/bin/bat`.
+- Deskflow `1.22.x` on a Debian/X11 server can send horizontal touchpad scroll as back/forward button events on newer X11 clients. `scripts/fix-deskflow-buttons` remaps the client's XTEST button map from `8/9` to `6/7`. Override the target pointer with `DESKFLOW_XTEST_POINTER` if needed.
 - `ssh/config` and `git/config` are opt-in via `--link-private` because they contain host-specific data, personal identity, or non-Debian remnants.
 - AUR-specific package resolution is intentionally not attempted. Package files use Debian package names, and unavailable entries are skipped.
 

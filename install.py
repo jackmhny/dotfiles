@@ -64,6 +64,7 @@ DOTLINKS: list[tuple[str, str]] = [
     ("tmux", ".config/tmux"),
     ("zsh", ".config/zsh"),
     ("applications/helium-laptop-audio.desktop", ".local/share/applications/helium-laptop-audio.desktop"),
+    ("applications/fix-deskflow-buttons.desktop", ".config/autostart/fix-deskflow-buttons.desktop"),
     ("chrome-flags.conf", ".config/chrome-flags.conf"),
     ("dunst", ".config/dunst"),
     ("sunshine/apps.json", ".config/sunshine/apps.json"),
