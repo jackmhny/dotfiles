@@ -66,11 +66,11 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
 
     bindsym $mod+shift+w exec $file-manager
 
-    # neovim in an interactive zsh shell
-    bindsym $mod+Shift+v exec $term -e zsh -ic 'nvim'
+    # neovim
+    bindsym $mod+Shift+v exec $term -e nvim
 
     # neovim with Snacks smart picker (<leader><space>)
-    bindsym $mod+Shift+s exec $term -e zsh -ic 'nvim +"lua Snacks.picker.smart()"'
+    bindsym $mod+Shift+s exec $term -e nvim +"lua Snacks.picker.smart()"
 
     # emoji picker
     bindsym $mod+period exec rofimoji
