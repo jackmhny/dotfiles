@@ -30,6 +30,7 @@ Useful variants:
 - Checks `/etc/os-release` for Debian 13/trixie unless `--force` is used.
 - Installs Debian packages from `install/packages/debian13-*.txt` using `apt-get`.
 - Filters unavailable package names with `apt-cache show`, so packages that are absent from your enabled repositories do not break the whole run.
+- For the `desktop-i3` profile, installs the Xorg/libinput touchpad config into `/etc/X11/xorg.conf.d/40-libinput.conf`, backing up any existing file first. This enables natural scrolling and tap-to-click.
 - Links dotfiles into XDG locations, backing up pre-existing files as `*.backup-YYYYMMDD-HHMMSS`.
 - Links all files in `scripts/` into `~/.local/bin`.
 - Links user systemd units into `~/.config/systemd/user`, reloads the user manager, enables `codex-usagebar.timer`, and runs `codex-usagebar.service` once to populate the i3status cache.

@@ -81,6 +81,10 @@ USER_SYSTEMD_TIMERS = [
     "codex-usagebar.timer",
 ]
 
+DESKTOP_SYSTEM_CONFIGS = [
+    ("xorg/40-libinput.conf", "/etc/X11/xorg.conf.d/40-libinput.conf", "0644"),
+]
+
 APT_SOURCES = """\
 Types: deb
 URIs: http://deb.debian.org/debian
@@ -312,6 +316,23 @@ def install_apt_packages(ctx: Context, groups: list[str]) -> None:
         run(ctx, ["apt-get", "install", "-y", *available], sudo=True)
 
 
+def install_system_configs(ctx: Context, groups: list[str]) -> None:
+    if "desktop-i3" not in groups:
+        return
+
+    note("installing desktop system configs")
+    for src_rel, dest_abs, mode in DESKTOP_SYSTEM_CONFIGS:
+        src = ctx.repo / src_rel
+        if not src.exists():
+            warn(f"missing system config source: {src_rel}")
+            continue
+
+        dest = Path(dest_abs)
+        if lexists(dest):
+            run(ctx, ["cp", "-a", str(dest), f"{dest}.backup-{TIMESTAMP}"], sudo=True)
+        run(ctx, ["install", "-D", "-m", mode, str(src), str(dest)], sudo=True)
+
+
 def configure_debian_sources(ctx: Context) -> None:
     note("installing Debian 13/trixie deb822 apt sources with contrib/non-free/non-free-firmware")
     tmp = Path("/tmp/dotfiles-debian.sources")
@@ -523,6 +544,7 @@ def print_summary(profiles: list[str], groups: list[str], ctx: Context) -> None:
     print(f"pkg groups:  {', '.join(groups)}")
     print(f"apt pkgs:    {len(packages)} names before availability filtering")
     print(f"dotfiles:    public links + {'private links' if ctx.link_private else 'no private links'}")
+    print(f"system cfgs: {'desktop Xorg/libinput config' if 'desktop-i3' in groups else 'none'}")
     print("user timers: codex-usagebar.timer")
     print(f"apt source:  {'write Debian trixie sources' if ctx.configure_apt_sources else 'leave existing apt sources alone'}")
     print(f"external:    {'enabled' if ctx.external else 'disabled'}")
@@ -584,6 +606,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 1
 
     install_apt_packages(ctx, groups)
+    install_system_configs(ctx, groups)
     if not args.no_link:
         link_dotfiles(ctx)
     debian_fixups(ctx, groups)
