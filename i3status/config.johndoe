@@ -17,8 +17,8 @@ cpu_temperature 0 {
 }
 
 wireless _first_ {
-    format_up = " %ip"
-    format_down = " down"
+    format_up = "  %ip"
+    format_down = "  down"
 }
 
 ethernet _first_ {
