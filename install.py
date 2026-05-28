@@ -63,6 +63,7 @@ DOTLINKS: list[tuple[str, str]] = [
     ("zsh", ".config/zsh"),
     ("zsh/.zshenv", ".zshenv"),
     ("chrome-flags.conf", ".config/chrome-flags.conf"),
+    ("dunst", ".config/dunst"),
 ]
 
 # These are intentionally opt-in because they contain personal hosts, identity,

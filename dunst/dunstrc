@@ -1,0 +1,16 @@
+[global]
+    icon_theme = "breeze, Adwaita, hicolor"
+    icon_position = left
+    min_icon_size = 16
+    max_icon_size = 32
+    text_icon_padding = 8
+
+[agent-sudo-request]
+    summary = "Agent sudo request"
+    background = "#3b3052"
+    foreground = "#f8f5ff"
+    frame_color = "#bb9af7"
+    new_icon = "fingerprint"
+    set_stack_tag = "agent-sudo-request"
+    timeout = 10
+    override_pause_level = 50
