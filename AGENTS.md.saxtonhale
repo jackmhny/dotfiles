@@ -1,0 +1,17 @@
+# Machine Context
+
+- This is Jack's personal i3/Xorg workstation.
+- Dotfiles live in `/home/jackmhny/dotfiles`.
+- Development workspaces live in `/home/jackmhny/dev`.
+- User systemd units live in `/home/jackmhny/.config/systemd/user`.
+
+## Sudo On This Machine
+
+Fingerprint auth works globally from the desktop session. For narrow admin actions, send a one-sentence dunst notification, then run normal `sudo` and let Jack press the fingerprint reader.
+
+```sh
+dunstify -u normal -t 10000 "Agent sudo request" "<one sentence reason>" 2>/dev/null || true
+sudo <command>
+```
+
+If fingerprint auth times out, say that and rerun the same narrow command once Jack is ready.

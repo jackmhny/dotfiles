@@ -59,10 +59,8 @@ DOTLINKS: list[tuple[str, str]] = [
     ("qutebrowser", ".config/qutebrowser"),
     ("rofi", ".config/rofi"),
     ("starship", ".config/starship"),
-    ("tmux/tmux.conf", ".tmux.conf"),
+    ("tmux", ".config/tmux"),
     ("zsh", ".config/zsh"),
-    ("zsh/.zshenv", ".zshenv"),
-    ("zsh/.aliases", ".bash_aliases"),
     ("chrome-flags.conf", ".config/chrome-flags.conf"),
     ("dunst", ".config/dunst"),
 ]
