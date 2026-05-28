@@ -62,6 +62,7 @@ DOTLINKS: list[tuple[str, str]] = [
     ("tmux/tmux.conf", ".tmux.conf"),
     ("zsh", ".config/zsh"),
     ("zsh/.zshenv", ".zshenv"),
+    ("zsh/.aliases", ".bash_aliases"),
     ("chrome-flags.conf", ".config/chrome-flags.conf"),
     ("dunst", ".config/dunst"),
 ]

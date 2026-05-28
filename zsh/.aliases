@@ -15,6 +15,8 @@ alias ai='aichat --session temp'
 function mm {
     opencode run -m opencode/minimax-m2.5-free "$@"
 }
+# Codex aliases
+alias codexy='codex --yolo'
 # lazygit alias
 alias lg="lazygit"
 alias fzvim='fzf \
@@ -29,9 +31,6 @@ alias connect_orochi='bluetoothctl connect D7:4A:37:B4:F1:0E'
 alias connect_XM5='bluetoothctl connect 88:C9:E8:D9:D4:C4'
 alias disconnect_XM5='bluetoothctl disconnect 88:C9:E8:D9:D4:C4'
 # ssh aliases
-alias sshd="ssh de4144"
-alias contabo="ssh contabo"
-alias borg="borg --remote-path=borg14"
 alias nvm="fnm"
 
 alias v="nvim ."
@@ -39,5 +38,3 @@ alias s="kitten ssh"
 alias grep='grep --color=auto'
 
 alias 180hz='xrandr --output DP-0 --mode 2560x1440 --rate 180.00'
-# Claude with skip permissions
-alias clauded='claude --dangerously-skip-permissions'
