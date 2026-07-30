@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+
+fail() {
+    printf 'quickfix: %s\n' "$*" >&2
+    exit 1
+}
+
+command -v codex >/dev/null 2>&1 ||
+    fail 'codex is not installed; install it and run `codex login`'
+
+if (($#)); then
+    request=$*
+elif [[ ! -t 0 ]]; then
+    request=$(cat)
+else
+    fail 'type a request before pressing Alt+O'
+fi
+
+[[ $request =~ [^[:space:]] ]] || fail 'the request is empty'
+
+model=${QUICKFIX_MODEL:-gpt-5.6-luna}
+reasoning=${QUICKFIX_REASONING:-low}
+shell_name=${SHELL##*/}
+
+printf -v prompt '%s\n\nShell: %s\nRequest: %s' \
+    'Return exactly one shell command that satisfies the request. Output only the command: no Markdown, code fence, prompt character, explanation, or alternatives. Do not execute commands or inspect files. Prefer the simplest safe command. The user will review it before execution.' \
+    "${shell_name:-zsh}" "$request"
+
+output=$(codex exec \
+    --ephemeral \
+    --ignore-user-config \
+    --ignore-rules \
+    --skip-git-repo-check \
+    --sandbox read-only \
+    --model "$model" \
+    --config "model_reasoning_effort=\"$reasoning\"" \
+    "$prompt" </dev/null) || exit $?
+
+# Be tolerant if a model ignores the output-only instruction.
+if [[ $output == '```'* ]]; then
+    output=${output#*$'\n'}
+    [[ $output == *$'\n```' ]] && output=${output%$'\n```'}
+fi
+[[ $output == '$ '* ]] && output=${output#'$ '}
+[[ $output =~ [^[:space:]] ]] || fail 'codex returned an empty command'
+
+printf '%s\n' "$output"
