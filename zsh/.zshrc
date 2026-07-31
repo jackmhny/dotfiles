@@ -88,19 +88,8 @@ eval "$(starship init zsh)"
 
 
 
-# Shell-GPT Integration
-alias shell-gpt='uv tool run --from shell-gpt sgpt'
-_sgpt_zsh() {
-    if [[ -n "$BUFFER" ]]; then
-        _sgpt_prev_cmd=$BUFFER
-        BUFFER+=" ⌛"
-        zle -I && zle redisplay
-        BUFFER=$(uv tool run --from shell-gpt sgpt --shell "$_sgpt_prev_cmd" --no-interaction)
-        zle end-of-line
-    fi
-}
-zle -N _sgpt_zsh
-bindkey '^[o' _sgpt_zsh  # Alt+O to trigger shell-gpt suggestions
+# Quickfix: Alt+O turns the current buffer into an editable command.
+[[ -f "$ZDOTDIR/quickfix.zsh" ]] && source "$ZDOTDIR/quickfix.zsh"
 
 # Fuzzy directory navigation
 fcd() {

@@ -33,6 +33,9 @@ Useful variants:
 - For the `desktop-i3` profile, installs the Xorg/libinput touchpad config into `/etc/X11/xorg.conf.d/40-libinput.conf`, backing up any existing file first. This enables natural scrolling and tap-to-click.
 - Links dotfiles into XDG locations, backing up pre-existing files as `*.backup-YYYYMMDD-HHMMSS`.
 - Links all files in `scripts/` into `~/.local/bin`.
+- Installs the pure-shell quickfix runtime and Bash Alt+O widget, with the Zsh
+  widget available for Zsh sessions. Quickfix uses the saved Codex CLI login
+  and does not execute generated commands.
 - Links user systemd units into `~/.config/systemd/user`, reloads the user manager, enables `codex-usagebar.timer`, and runs `codex-usagebar.service` once to populate the i3status cache.
 - Creates Debian command-name shims where needed, especially `fd -> fdfind` and `bat -> batcat`.
 - Creates `~/.config/i3/config.local`, because the i3 config includes that path.
