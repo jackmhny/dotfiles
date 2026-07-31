@@ -97,6 +97,10 @@ if [ -f "$HOME/.config/bash/aliases" ]; then
     . "$HOME/.config/bash/aliases"
 fi
 
+# Quickfix: Alt+O turns the current buffer into an editable command.
+[ -f "$HOME/.config/quickfix/quickfix.bash" ] && \
+    . "$HOME/.config/quickfix/quickfix.bash"
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).

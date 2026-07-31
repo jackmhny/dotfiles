@@ -11,7 +11,7 @@ _quickfix_alt_o() {
     zle -I
     zle redisplay
 
-    generated=$(command quickfix "$original" 2>"$error_file")
+    generated=$(QUICKFIX_SHELL=zsh quickfix "$original" 2>"$error_file")
     status=$?
     BUFFER=$original
 

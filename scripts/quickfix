@@ -22,11 +22,11 @@ fi
 
 model=${QUICKFIX_MODEL:-gpt-5.6-luna}
 reasoning=${QUICKFIX_REASONING:-low}
-shell_name=${SHELL##*/}
+shell_name=${QUICKFIX_SHELL:-${SHELL##*/}}
 
 printf -v prompt '%s\n\nShell: %s\nRequest: %s' \
     'Return exactly one shell command that satisfies the request. Output only the command: no Markdown, code fence, prompt character, explanation, or alternatives. Do not execute commands or inspect files. Prefer the simplest safe command. The user will review it before execution.' \
-    "${shell_name:-zsh}" "$request"
+    "${shell_name:-bash}" "$request"
 
 output=$(codex exec \
     --ephemeral \

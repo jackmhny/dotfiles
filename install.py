@@ -51,6 +51,7 @@ DOTLINKS: list[tuple[str, str]] = [
     ("gtk-3.0", ".config/gtk-3.0"),
     ("gtk-4.0", ".config/gtk-4.0"),
     ("bash/bashrc", ".bashrc"),
+    ("bash/quickfix.bash", ".config/quickfix/quickfix.bash"),
     ("zsh/.aliases", ".config/bash/aliases"),
     ("i3", ".config/i3"),
     ("i3status", ".config/i3status"),
