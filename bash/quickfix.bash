@@ -21,4 +21,4 @@ _quickfix_alt_o() {
 }
 
 bind -m emacs-standard -x '"\eo":_quickfix_alt_o'
-bind -m vi-insertion -x '"\eo":_quickfix_alt_o'
+bind -m vi-insert -x '"\eo":_quickfix_alt_o'
