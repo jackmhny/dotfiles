@@ -2,7 +2,7 @@
 set $mod Mod4
 
 # Font for window titles.
-font pango:JetBrainsMono Nerd Font 13
+font pango:JetBrainsMono Nerd Font 11
 
 
 floating_modifier $mod
@@ -63,6 +63,9 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
     # 1Password shortcuts
     bindsym $mod+backslash exec 1password
     # bindsym $mod+Shift+bracketright exec 1password --quick-access
+
+    # Fresh, lean Luna chat
+    bindsym $mod+Shift+bracketleft exec --no-startup-id ~/.local/bin/quickai
 
     bindsym $mod+shift+w exec $file-manager
 
@@ -211,6 +214,8 @@ bindsym $mod+r mode "resize"
 
 bindsym $mod+t sticky toggle
 
+for_window [class="^QuickAI$"] floating enable, border pixel 2, resize set 1200 760, move position center
+
 #
 # Utilities:
 #
@@ -226,6 +231,6 @@ bindsym $mod+t sticky toggle
     bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 5%+
 
 bar {
-    status_command i3status
+    status_command ~/.local/bin/t3-i3status
     position bottom
 }
