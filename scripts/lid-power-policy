@@ -1,0 +1,184 @@
+#!/bin/sh
+
+set -u
+
+low_battery_percent=10
+closed_hibernate_seconds=600
+idle_hibernate_milliseconds=600000
+poll_seconds=2
+failure_retry_seconds=10
+resume_grace_seconds=30
+
+log_message() {
+    message=$1
+    /usr/bin/logger -t lid-power-policy -- "$message"
+    printf '%s\n' "$message" >&2
+}
+
+read_lid_state() {
+    found_lid=false
+
+    for state_file in /proc/acpi/button/lid/*/state; do
+        [ -r "$state_file" ] || continue
+        found_lid=true
+
+        if /usr/bin/grep -q '[[:space:]]closed$' "$state_file"; then
+            printf '%s\n' closed
+            return 0
+        fi
+    done
+
+    if [ "$found_lid" = true ]; then
+        printf '%s\n' open
+        return 0
+    fi
+
+    return 1
+}
+
+read_battery_capacity() {
+    for supply in /sys/class/power_supply/*; do
+        [ -r "$supply/type" ] || continue
+        [ "$(/usr/bin/cat "$supply/type")" = Battery ] || continue
+        [ -r "$supply/capacity" ] || continue
+
+        /usr/bin/cat "$supply/capacity"
+        return 0
+    done
+
+    return 1
+}
+
+read_idle_milliseconds() {
+    /usr/bin/xssstate -i 2>/dev/null
+}
+
+run_power_action() {
+    action=$1
+    reason=$2
+
+    log_message "$reason; requesting $action"
+
+    case "$action" in
+        hibernate)
+            /usr/bin/systemctl hibernate
+            ;;
+        suspend-then-hibernate)
+            /usr/bin/systemctl suspend-then-hibernate
+            ;;
+        *)
+            log_message "refusing unknown power action: $action"
+            return 1
+            ;;
+    esac
+}
+
+print_status() {
+    lid_state=$(read_lid_state) || lid_state=unknown
+    battery_capacity=$(read_battery_capacity) || battery_capacity=unknown
+    idle_milliseconds=$(read_idle_milliseconds) || idle_milliseconds=unknown
+
+    printf 'lid=%s battery=%s%% idle_ms=%s\n' \
+        "$lid_state" "$battery_capacity" "$idle_milliseconds"
+}
+
+case "${1:-}" in
+    --status)
+        print_status
+        exit 0
+        ;;
+    '')
+        ;;
+    *)
+        printf 'usage: %s [--status]\n' "$0" >&2
+        exit 2
+        ;;
+esac
+
+closed_since=0
+resume_grace_until=0
+
+log_message "started: hibernate at <=${low_battery_percent}% when closed, after ${closed_hibernate_seconds}s closed, or after ${idle_hibernate_milliseconds}ms idle while open and low"
+
+while :; do
+    now=$(/usr/bin/date +%s)
+
+    if ! lid_state=$(read_lid_state); then
+        log_message 'cannot read lid state; retaining logind fallback and retrying'
+        /usr/bin/sleep "$failure_retry_seconds"
+        continue
+    fi
+
+    if ! battery_capacity=$(read_battery_capacity); then
+        log_message 'cannot read battery capacity; retrying without a power action'
+        /usr/bin/sleep "$failure_retry_seconds"
+        continue
+    fi
+
+    case "$battery_capacity" in
+        ''|*[!0-9]*)
+            log_message "invalid battery capacity '$battery_capacity'; retrying without a power action"
+            /usr/bin/sleep "$failure_retry_seconds"
+            continue
+            ;;
+    esac
+
+    if [ "$lid_state" = closed ]; then
+        if [ "$closed_since" -eq 0 ]; then
+            closed_since=$now
+        fi
+
+        closed_seconds=$((now - closed_since))
+
+        if [ "$battery_capacity" -le "$low_battery_percent" ]; then
+            if ! run_power_action hibernate \
+                "lid closed with battery at ${battery_capacity}%"; then
+                log_message 'hibernate request failed; retrying'
+                /usr/bin/sleep "$failure_retry_seconds"
+            fi
+        elif [ "$closed_seconds" -ge "$closed_hibernate_seconds" ]; then
+            if ! run_power_action hibernate \
+                "lid has remained closed for ${closed_seconds}s"; then
+                log_message 'hibernate request failed; retrying'
+                /usr/bin/sleep "$failure_retry_seconds"
+            fi
+        else
+            if ! run_power_action suspend-then-hibernate \
+                "lid closed with battery at ${battery_capacity}%"; then
+                log_message 'suspend-then-hibernate request failed; retrying'
+                /usr/bin/sleep "$failure_retry_seconds"
+            fi
+        fi
+
+        # A systemctl sleep command returns after resume. Preserve closed_since
+        # so an unwanted wake with the lid still closed is handled immediately.
+        resume_grace_until=$(( $(/usr/bin/date +%s) + resume_grace_seconds ))
+        continue
+    fi
+
+    closed_since=0
+
+    if [ "$battery_capacity" -le "$low_battery_percent" ] && \
+       [ "$now" -ge "$resume_grace_until" ]; then
+        if idle_milliseconds=$(read_idle_milliseconds); then
+            case "$idle_milliseconds" in
+                ''|*[!0-9]*)
+                    ;;
+                *)
+                    if [ "$idle_milliseconds" -ge "$idle_hibernate_milliseconds" ]; then
+                        if ! run_power_action hibernate \
+                            "lid open, battery at ${battery_capacity}%, and X11 idle for ${idle_milliseconds}ms"; then
+                            log_message 'hibernate request failed; retrying'
+                            /usr/bin/sleep "$failure_retry_seconds"
+                        fi
+
+                        resume_grace_until=$(( $(/usr/bin/date +%s) + resume_grace_seconds ))
+                        continue
+                    fi
+                    ;;
+            esac
+        fi
+    fi
+
+    /usr/bin/sleep "$poll_seconds"
+done

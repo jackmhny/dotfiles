@@ -1,0 +1,11 @@
+[Unit]
+Description=Apply conditional lid and low-battery hibernation policy
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/systemd-inhibit --what=handle-lid-switch --who=lid-power-policy --why="Apply conditional lid and battery policy" --mode=block %h/.local/bin/lid-power-policy
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
