@@ -1,5 +1,11 @@
 # jackmhny i3status
 
+general {
+    output_format = "i3bar"
+    colors = true
+    interval = 5
+}
+
 order += "read_file codex_usage"
 order += "cpu_temperature 0"
 order += "disk /"

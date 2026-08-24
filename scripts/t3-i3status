@@ -1,0 +1,269 @@
+#!/usr/bin/env python3
+"""Add live T3 Code thread states to an i3status JSON stream."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from pathlib import Path
+import signal
+import sqlite3
+import subprocess
+import sys
+from typing import Any
+
+
+T3_HOME = Path(os.environ.get("T3_HOME", Path.home() / ".t3"))
+STATE_DB = T3_HOME / "userdata" / "state.sqlite"
+RUNTIME_FILE = T3_HOME / "userdata" / "server-runtime.json"
+
+COLOR_ACTIVE = "#fcd34d"
+COLOR_ATTENTION = "#fb414a"
+COLOR_DONE = "#6ee7b7"
+COLOR_LABEL = "#a9b1d6"
+
+QUERY = """
+SELECT
+  t.thread_id,
+  t.title,
+  t.created_at,
+  t.updated_at,
+  t.settled_at,
+  t.pending_approval_count,
+  t.pending_user_input_count,
+  s.status AS session_status,
+  s.last_error,
+  lt.state AS turn_state,
+  lt.requested_at,
+  lt.completed_at
+FROM projection_threads AS t
+LEFT JOIN projection_thread_sessions AS s
+  ON s.thread_id = t.thread_id
+LEFT JOIN projection_turns AS lt
+  ON lt.row_id = (
+    SELECT candidate.row_id
+    FROM projection_turns AS candidate
+    WHERE candidate.thread_id = t.thread_id
+    ORDER BY candidate.row_id DESC
+    LIMIT 1
+  )
+WHERE t.deleted_at IS NULL
+  AND t.archived_at IS NULL
+  AND (
+    t.pending_approval_count > 0
+    OR t.pending_user_input_count > 0
+    OR s.status IN ('running', 'starting', 'error')
+    OR (
+      t.settled_at IS NULL
+      AND (
+        lt.state IN ('running', 'completed')
+        OR (s.status = 'stopped' AND COALESCE(lt.state, '') != 'completed')
+      )
+    )
+  )
+ORDER BY t.created_at ASC, t.thread_id ASC
+"""
+
+_last_error: str | None = None
+
+
+def report_once(message: str) -> None:
+    global _last_error
+    if message != _last_error:
+        print(f"t3-i3status: {message}", file=sys.stderr)
+        _last_error = message
+
+
+def t3_server_running() -> bool:
+    try:
+        runtime = json.loads(RUNTIME_FILE.read_text(encoding="utf-8"))
+        pid = int(runtime["pid"])
+        os.kill(pid, 0)
+        cmdline = Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ")
+        return b"t3code" in cmdline or b"app.asar/apps/server" in cmdline
+    except (FileNotFoundError, KeyError, TypeError, ValueError, ProcessLookupError, PermissionError, OSError, json.JSONDecodeError):
+        return False
+
+
+def classify(row: sqlite3.Row) -> tuple[str, str, str]:
+    approvals = int(row["pending_approval_count"] or 0)
+    inputs = int(row["pending_user_input_count"] or 0)
+    session = row["session_status"] or ""
+    turn = row["turn_state"] or ""
+
+    if inputs > 0:
+        return "attention", COLOR_ATTENTION, "awaiting input"
+    if approvals > 0:
+        return "attention", COLOR_ATTENTION, "pending approval"
+    if session == "error" or row["last_error"]:
+        return "attention", COLOR_ATTENTION, "error"
+    if session in {"running", "starting"} and turn != "completed":
+        return "active", COLOR_ACTIVE, "working"
+    if turn == "running":
+        return "active", COLOR_ACTIVE, "working"
+    if turn == "completed":
+        return "done", COLOR_DONE, "completed"
+    return "attention", COLOR_ATTENTION, "stopped"
+
+
+def get_agents() -> list[dict[str, str]]:
+    global _last_error
+    if not t3_server_running() or not STATE_DB.is_file():
+        _last_error = None
+        return []
+
+    try:
+        uri = f"file:{STATE_DB}?mode=ro"
+        with sqlite3.connect(uri, uri=True, timeout=0.1) as db:
+            db.row_factory = sqlite3.Row
+            db.execute("PRAGMA query_only = ON")
+            rows = db.execute(QUERY).fetchall()
+        _last_error = None
+    except sqlite3.Error as error:
+        report_once(f"T3 state unavailable ({error})")
+        return []
+
+    agents: list[dict[str, str]] = []
+    for row in rows:
+        state, color, label = classify(row)
+        agents.append(
+            {
+                "thread_id": row["thread_id"],
+                "title": row["title"] or "Untitled thread",
+                "state": state,
+                "color": color,
+                "label": label,
+            }
+        )
+    return agents
+
+
+def status_blocks(agents: list[dict[str, str]]) -> list[dict[str, Any]]:
+    if not agents:
+        return []
+
+    blocks: list[dict[str, Any]] = [
+        {
+            "name": "t3_label",
+            "full_text": "T3",
+            "color": COLOR_LABEL,
+            "separator": False,
+            "separator_block_width": 5,
+        }
+    ]
+    for index, agent in enumerate(agents, start=1):
+        is_last = index == len(agents)
+        blocks.append(
+            {
+                "name": "t3_agent",
+                "instance": agent["thread_id"],
+                "full_text": f"{index}█",
+                "short_text": f"{index}█",
+                "color": agent["color"],
+                "separator": is_last,
+                "separator_block_width": 9 if is_last else 5,
+            }
+        )
+    return blocks
+
+
+def inject(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    clean = [block for block in blocks if not str(block.get("name", "")).startswith("t3_")]
+    additions = status_blocks(get_agents())
+    if not additions:
+        return clean
+
+    insert_at = 0
+    for index, block in enumerate(clean):
+        if block.get("name") == "read_file" and "codex-usage" in str(block.get("instance", "")):
+            insert_at = index + 1
+            break
+    return clean[:insert_at] + additions + clean[insert_at:]
+
+
+def demo() -> int:
+    agents = get_agents()
+    if not agents:
+        print("T3: no active or unsettled agents")
+        return 0
+
+    reset = "\033[0m"
+    label_color = "\033[38;2;169;177;214m"
+    ansi = {
+        "active": "\033[38;2;252;211;77m",
+        "attention": "\033[38;2;251;65;74m",
+        "done": "\033[38;2;110;231;183m",
+    }
+    compact = [f"{label_color}T3"]
+    for index, agent in enumerate(agents, start=1):
+        compact.append(f"{label_color}{index}{ansi[agent['state']]}█")
+    print(" ".join(compact) + reset)
+    for index, agent in enumerate(agents, start=1):
+        print(f" {index}  {agent['label']:<16} {agent['title']}")
+    return 0
+
+
+def print_json() -> int:
+    print(json.dumps(status_blocks(get_agents()), ensure_ascii=False, indent=2))
+    return 0
+
+
+def stream_i3status() -> int:
+    child = subprocess.Popen(
+        ["i3status"],
+        stdout=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        bufsize=1,
+    )
+
+    def forward(signum: int, _frame: Any) -> None:
+        if child.poll() is None:
+            child.send_signal(signum)
+
+    for signum in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGUSR1):
+        signal.signal(signum, forward)
+
+    assert child.stdout is not None
+    try:
+        for line in child.stdout:
+            stripped = line.strip()
+            comma = stripped.startswith(",")
+            payload = stripped[1:] if comma else stripped
+            if payload.startswith("[") and payload != "[":
+                try:
+                    blocks = json.loads(payload)
+                    if isinstance(blocks, list):
+                        rendered = json.dumps(inject(blocks), ensure_ascii=False, separators=(",", ":"))
+                        print(("," if comma else "") + rendered, flush=True)
+                        continue
+                except (json.JSONDecodeError, TypeError):
+                    pass
+            print(line, end="", flush=True)
+    except BrokenPipeError:
+        if child.poll() is None:
+            child.terminate()
+        return 0
+    finally:
+        if child.poll() is None:
+            child.terminate()
+    return child.wait()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--demo", action="store_true", help="show current T3 states in the terminal")
+    mode.add_argument("--json", action="store_true", help="print the generated i3bar blocks once")
+    args = parser.parse_args()
+
+    if args.demo:
+        return demo()
+    if args.json:
+        return print_json()
+    return stream_i3status()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
