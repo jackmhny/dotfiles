@@ -8,7 +8,9 @@ i3-wm
 i3status
 i3lock
 xss-lock
+suckless-tools
 kitty
+xterm
 rofi
 rofimoji
 dunst

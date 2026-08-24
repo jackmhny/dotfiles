@@ -58,7 +58,9 @@ DOTLINKS: list[tuple[str, str]] = [
     ("mpv", ".config/mpv"),
     ("nvim", ".config/nvim"),
     ("opencode", ".config/opencode"),
+    ("quickai", ".config/quickai"),
     ("qutebrowser", ".config/qutebrowser"),
+    ("redshift.conf", ".config/redshift.conf"),
     ("rofi", ".config/rofi"),
     ("starship", ".config/starship"),
     ("tmux", ".config/tmux"),
@@ -90,6 +92,7 @@ USER_SYSTEMD_UNITS = [
     "codex-usagebar.timer",
     "ipad-display-watch.service",
     "laptop-audio-receiver.service",
+    "lid-power-policy.service",
 ]
 
 USER_SYSTEMD_TIMERS = [
@@ -99,6 +102,7 @@ USER_SYSTEMD_TIMERS = [
 USER_SYSTEMD_SERVICES = [
     "ipad-display-watch.service",
     "laptop-audio-receiver.service",
+    "lid-power-policy.service",
 ]
 
 DESKTOP_SYSTEM_CONFIGS = [
@@ -421,6 +425,7 @@ def link_dotfiles(ctx: Context) -> None:
             link_one(ctx, src_rel, dest_rel)
 
     link_scripts(ctx)
+    build_quickai(ctx)
     setup_user_systemd(ctx)
 
 
@@ -441,6 +446,16 @@ def link_scripts(ctx: Context) -> None:
                 dest.chmod(dest.stat().st_mode | 0o111)
             except OSError:
                 pass
+
+
+def build_quickai(ctx: Context) -> None:
+    cc = shutil.which("cc")
+    src = ctx.repo / "quickai/quickai.c"
+    dest = ctx.local_bin / "quickai"
+    if not cc or not src.exists():
+        warn("cc or quickai source missing; not building quickai")
+        return
+    run(ctx, [cc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-o", dest, src])
 
 
 def setup_user_systemd(ctx: Context) -> None:
