@@ -114,3 +114,6 @@ fi
 source /home/jackmhny/.local/share/bash-completion/completions/deno.bash
 export EDITOR=nvim
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
