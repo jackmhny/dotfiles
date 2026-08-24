@@ -14,7 +14,6 @@ opencode/antigravity-logs/
 opencode/opencode.json.bak-*
 opencode/package-lock.json
 opencode/antigravity-accounts.json.*.tmp
-install.sh
 i3/config.local
 __pycache__/
 *.py[cod]
