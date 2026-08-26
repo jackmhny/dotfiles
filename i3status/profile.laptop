@@ -1,0 +1,2 @@
+order += "wireless _first_"
+order += "battery 0"

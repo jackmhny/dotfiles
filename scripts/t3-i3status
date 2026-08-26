@@ -11,12 +11,16 @@ import signal
 import sqlite3
 import subprocess
 import sys
+import tempfile
 from typing import Any
 
 
 T3_HOME = Path(os.environ.get("T3_HOME", Path.home() / ".t3"))
 STATE_DB = T3_HOME / "userdata" / "state.sqlite"
 RUNTIME_FILE = T3_HOME / "userdata" / "server-runtime.json"
+I3STATUS_DIR = Path.home() / ".config" / "i3status"
+MACHINE_ROLE_FILE = I3STATUS_DIR / "machine-role"
+MACHINE_PROFILE_MARKER = "# machine-profile: network and battery blocks are inserted here"
 
 COLOR_ACTIVE = "#fcd34d"
 COLOR_ATTENTION = "#fb414a"
@@ -209,14 +213,52 @@ def print_json() -> int:
     return 0
 
 
-def stream_i3status() -> int:
-    child = subprocess.Popen(
-        ["i3status"],
-        stdout=subprocess.PIPE,
-        text=True,
+def build_i3status_config() -> Path:
+    role = os.environ.get("I3STATUS_MACHINE_ROLE", "").strip().lower()
+    if not role:
+        try:
+            role = MACHINE_ROLE_FILE.read_text(encoding="utf-8").strip().lower()
+        except FileNotFoundError:
+            role = "desktop"
+            report_once(f"{MACHINE_ROLE_FILE} is missing; using desktop profile")
+
+    if role not in {"laptop", "desktop"}:
+        raise SystemExit(
+            f"invalid i3status machine role {role!r}; expected 'laptop' or 'desktop' "
+            f"in {MACHINE_ROLE_FILE}"
+        )
+
+    base = (I3STATUS_DIR / "config").read_text(encoding="utf-8")
+    profile = (I3STATUS_DIR / f"profile.{role}").read_text(encoding="utf-8").rstrip()
+    if MACHINE_PROFILE_MARKER not in base:
+        raise SystemExit(f"missing machine profile marker in {I3STATUS_DIR / 'config'}")
+
+    rendered = base.replace(MACHINE_PROFILE_MARKER, profile, 1)
+    handle = tempfile.NamedTemporaryFile(
+        mode="w",
         encoding="utf-8",
-        bufsize=1,
+        prefix="i3status-",
+        suffix=".conf",
+        delete=False,
     )
+    with handle:
+        handle.write(rendered)
+    return Path(handle.name)
+
+
+def stream_i3status() -> int:
+    config_path = build_i3status_config()
+    try:
+        child = subprocess.Popen(
+            ["i3status", "--config", str(config_path)],
+            stdout=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            bufsize=1,
+        )
+    except Exception:
+        config_path.unlink(missing_ok=True)
+        raise
 
     def forward(signum: int, _frame: Any) -> None:
         if child.poll() is None:
@@ -248,7 +290,9 @@ def stream_i3status() -> int:
     finally:
         if child.poll() is None:
             child.terminate()
-    return child.wait()
+        result = child.wait()
+        config_path.unlink(missing_ok=True)
+    return result
 
 
 def main() -> int:

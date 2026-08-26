@@ -11,8 +11,7 @@ order += "cpu_temperature 0"
 order += "disk /"
 order += "memory"
 order += "volume master"
-order += "wireless _first_"
-# order += "ethernet _first_"
+# machine-profile: network and battery blocks are inserted here
 order += "tztime local"
 
 cpu_temperature 0 {
@@ -28,6 +27,11 @@ wireless _first_ {
 ethernet _first_ {
     format_up = ""
     format_down = ""
+}
+
+battery 0 {
+    format = "󰁹 %percentage"
+    path = "/sys/class/power_supply/CMB0/uevent"
 }
 
 disk "/" {

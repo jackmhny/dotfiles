@@ -15,6 +15,7 @@ opencode/opencode.json.bak-*
 opencode/package-lock.json
 opencode/antigravity-accounts.json.*.tmp
 i3/config.local
+i3status/machine-role
 __pycache__/
 *.py[cod]
 qutebrowser/qsettings/
