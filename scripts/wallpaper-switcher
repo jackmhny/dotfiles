@@ -1,0 +1,70 @@
+#!/bin/sh
+
+set -eu
+
+script_path=$(readlink -f "$0")
+wallpaper_dir=$(CDPATH= cd -- "$(dirname -- "$script_path")/../wallpapers" && pwd)
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper-switcher"
+state_file="$state_dir/current"
+
+apply_wallpaper() {
+    case "$1" in
+        black)
+            # Center instead of scaling the 1x1 image: feh paints all remaining
+            # root-pixmap space with the requested exact background color.
+            feh --no-fehbg --image-bg '#000000' --bg-center "$wallpaper_dir/black.png"
+            mkdir -p "$state_dir"
+            printf '%s\n' "$1" > "$state_file"
+            return
+            ;;
+        gradient)
+            image="$wallpaper_dir/1752456192303532.png"
+            ;;
+        debian-13)
+            image="$wallpaper_dir/debian-13-ceratopsian.svg"
+            ;;
+        *)
+            printf 'Unknown wallpaper: %s\n' "$1" >&2
+            exit 2
+            ;;
+    esac
+
+    if [ ! -f "$image" ]; then
+        printf 'Wallpaper not found: %s\n' "$image" >&2
+        exit 1
+    fi
+
+    feh --no-fehbg --bg-fill "$image"
+    mkdir -p "$state_dir"
+    printf '%s\n' "$1" > "$state_file"
+}
+
+choose_wallpaper() {
+    choice=$(printf '%s\n' \
+        'Pure black (#000000)' \
+        'Current gradient' \
+        'Debian 13 — Ceratopsian' |
+        rofi -dmenu -i -p 'Wallpaper') || exit 0
+
+    case "$choice" in
+        'Pure black (#000000)') apply_wallpaper black ;;
+        'Current gradient') apply_wallpaper gradient ;;
+        'Debian 13 — Ceratopsian') apply_wallpaper debian-13 ;;
+    esac
+}
+
+case "${1:-menu}" in
+    menu) choose_wallpaper ;;
+    restore)
+        preset=gradient
+        if [ -r "$state_file" ]; then
+            IFS= read -r preset < "$state_file"
+        fi
+        apply_wallpaper "$preset"
+        ;;
+    black|gradient|debian-13) apply_wallpaper "$1" ;;
+    *)
+        printf 'Usage: %s [menu|restore|black|gradient|debian-13]\n' "$0" >&2
+        exit 2
+        ;;
+esac

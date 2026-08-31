@@ -36,8 +36,8 @@ exec --no-startup-id sh -c 'export XDG_CONFIG_HOME="$HOME/.config"'
 # Host-specific overrides (not tracked)
 include ~/.config/i3/config.local
 
-# wallpaper
-exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
+# Restore the last wallpaper selected with the rofi switcher.
+exec --no-startup-id ~/.local/bin/wallpaper-switcher restore
 
 ### Key bindings
 #
@@ -80,6 +80,9 @@ exec --no-startup-id feh --bg-fill ~/Pictures/wallpapers/wall.jpg
 
     # clipboard history picker
     bindsym $mod+c exec rofi -modi "clipboard:greenclip print" -show clipboard
+
+    # wallpaper picker
+    bindsym $mod+Shift+b exec --no-startup-id ~/.local/bin/wallpaper-switcher
 
     # browser
     bindsym $mod+b exec --no-startup-id ~/.local/bin/launch-browser.sh

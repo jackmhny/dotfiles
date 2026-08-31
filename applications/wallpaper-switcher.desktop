@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Wallpaper Switcher
+Comment=Choose black, gradient, or Debian 13 wallpaper
+Exec=/home/jm/.local/bin/wallpaper-switcher
+Icon=preferences-desktop-wallpaper
+Terminal=false
+Categories=Settings;DesktopSettings;
