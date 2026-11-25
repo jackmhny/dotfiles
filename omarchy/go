@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# One-command Omarchy bootstrap for saxtonhale:
+#   curl -fsSL https://raw.githubusercontent.com/jackmhny/dotfiles/main/omarchy/go | bash
+set -euo pipefail
+
+if [[ -d "$HOME/dotfiles/.git" ]]; then
+  git -C "$HOME/dotfiles" pull --ff-only
+else
+  git clone https://github.com/jackmhny/dotfiles "$HOME/dotfiles"
+fi
+
+exec "$HOME/dotfiles/omarchy/bootstrap.sh" "$@"

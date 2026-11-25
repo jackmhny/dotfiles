@@ -32,6 +32,12 @@ done
 
 log() { printf '\n==> %s\n' "$*"; }
 
+# Auto-detect the staged encrypted secrets bundle on the Omarchy ESP (/boot).
+if [[ -z "$SECRETS_ARCHIVE" && -f /boot/saxtonhale-secrets.tar.gz.gpg ]]; then
+  SECRETS_ARCHIVE="/boot/saxtonhale-secrets.tar.gz.gpg"
+  echo "Found staged secrets bundle: $SECRETS_ARCHIVE (you'll be asked for its GPG passphrase from 1Password)"
+fi
+
 link_with_backup() {
   local src="$1" dst="$2"
   mkdir -p "$(dirname "$dst")"
@@ -58,9 +64,16 @@ if [[ "$SKIP_PACKAGES" == "false" ]]; then
   sudo pacman -S --needed --noconfirm tailscale nftables github-cli git-delta
 
   if [[ -n "$AUR_HELPER" ]]; then
-    "$AUR_HELPER" -S --needed --noconfirm google-chrome mullvad-vpn-bin
+    # Install each AUR package separately so one hiccup never blocks the rest.
+    for pkg in google-chrome mullvad-vpn-bin antigravity antigravity-cli hex-bin; do
+      "$AUR_HELPER" -S --needed --noconfirm "$pkg" \
+        || echo "  [warn] AUR install failed for $pkg (retry later: $AUR_HELPER -S $pkg)"
+    done
+    if ! command -v hex >/dev/null 2>&1; then
+      echo "  [note] hex not found; fallback: curl -fsSL https://anoma.ly/hex/install-linux.sh | sh"
+    fi
   else
-    echo "  [note] No AUR helper (yay/paru) found; install google-chrome and mullvad-vpn-bin manually."
+    echo "  [note] No AUR helper (yay/paru) found; install: google-chrome mullvad-vpn-bin antigravity antigravity-cli hex-bin"
   fi
 
   # Codex CLI (via npm/mise if node is present)
@@ -88,6 +101,7 @@ fi
 log "Linking Hyprland bindings.lua and LazyVim config"
 link_with_backup "$DOTFILES_DIR/omarchy/hypr/bindings.lua" "$HOME/.config/hypr/bindings.lua"
 link_with_backup "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
+hyprctl reload >/dev/null 2>&1 || true
 
 # 3. Install Mullvad + Tailscale nftables bypass rule
 log "Installing Mullvad + Tailscale nftables bypass"
@@ -142,7 +156,10 @@ if [[ -n "$SECRETS_ARCHIVE" ]]; then
   TMP_DIR="$(mktemp -d)"
   trap 'rm -rf "$TMP_DIR"' EXIT
 
-  gpg --decrypt "$SECRETS_ARCHIVE" | tar -xz -C "$TMP_DIR"
+  if ! gpg --decrypt "$SECRETS_ARCHIVE" | tar -xz -C "$TMP_DIR"; then
+    echo "  [warn] Could not decrypt secrets bundle; skipping restore (rerun: $0 --secrets $SECRETS_ARCHIVE)"
+    SECRETS_ARCHIVE=""
+  fi
   STAGE="$TMP_DIR/saxtonhale-secrets"
 
   # SSH
@@ -177,15 +194,22 @@ if [[ -n "$SECRETS_ARCHIVE" ]]; then
     sudo nmcli connection reload || true
     echo "  imported NetworkManager Wi-Fi profiles"
   fi
+
+  # Remove the staged copies from the ESP once restored.
+  if [[ "$SECRETS_ARCHIVE" == /boot/* && -d "$STAGE" ]]; then
+    sudo rm -f /boot/saxtonhale-secrets.tar.gz.gpg /boot/saxtonhale-secrets.tar.gz.gpg.sha256
+    echo "  removed staged secrets bundle from /boot"
+  fi
 fi
 
 log "Bootstrap complete!"
 cat <<'NEXT'
 Remaining interactive steps:
-  1. Sign into 1Password -> Settings -> Developer -> enable SSH Agent & Git commit signing
+  1. Launch Antigravity (Super+Shift+A, or `antigravity` / `agy`) and sign in; it can finish verification for you.
+  2. Sign into 1Password (Super+Shift+/) -> Settings -> Developer -> enable SSH Agent & Git commit signing
      (then paste your SSH public key into ~/.config/git/config under [user] signingkey).
-  2. Run: sudo tailscale up
-  3. Run: gh auth login
-  4. Install Antigravity & Hex (if not yet installed via AUR/upstream), and sign into Chrome.
-  5. Reload Hyprland bindings (or re-login) and test: Super+H/J/K/L, Super+Ctrl+/, Super+Shift+A.
+  3. Run: sudo tailscale up
+  4. Run: gh auth login
+  5. Sign into Chrome (Super+Shift+B). Test binds: Super+H/J/K/L, Super+Ctrl+/, Super+Shift+A.
+  6. When happy, make Omarchy the default boot: sudo efibootmgr -o 0004,0001
 NEXT

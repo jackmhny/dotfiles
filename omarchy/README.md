@@ -1,36 +1,32 @@
 # Omarchy Migration Kit (`saxtonhale`)
 
-Clean, minimal Omarchy v4.5.0+ setup for `saxtonhale` (LG Gram `14ZB90Q-G.AAC6U1`), installing onto `nvme1n1` (238.5 GB) while keeping Debian on `nvme0n1` intact as a fallback.
+Omarchy v4.5.0 on `nvme1n1` (Samsung 238.5 GB); Debian on `nvme0n1` stays as fallback (UEFI `Boot0001`).
 
-## What's Here
-- [hypr/bindings.lua](hypr/bindings.lua) — Minimal ~20-line Omarchy v4.5.0 Lua override:
-  - `Super + h/j/k/l` focus & `Super + Shift + h/j/k/l` window swap
-  - Displaced defaults re-parked cleanly: `Super + Ctrl + /` (Keybindings menu), `Super + Ctrl + J` (Toggle split), `Super + \` / `Super + Alt + \` (Cycle layout)
-  - AI plane: `Super + Shift + A` (Antigravity), `Super + Shift + Alt + A` (Codex), keeping stock `Super + Shift + Ctrl + A` (`omarchy-agent --pick`)
-  - Everything else stays stock Omarchy (`Super + W` close, `Super + Space` menu, `Super + T` float, `Super + C/V` copy/paste, `Super + Ctrl + V` clipboard history, `Print` / `Super + Ctrl + C` / `Super + Ctrl + Print` capture & OCR).
-- [ssh/config](ssh/config) — Unified SSH config (`Include ~/.ssh/config_tailnet_mesh` + `scout`/`lg`, `heavy`, `soldier`, `coding2`, `rsync`, `contabo`, `NZXT`, `rpi3b`, `rpi5`).
-- [mullvad/mullvad-tailscale-nft.service](mullvad/mullvad-tailscale-nft.service) — Loads `../mullvad_tailscale.conf` on boot so `100.64.0.0/10` bypasses Mullvad.
-- [bootstrap.sh](bootstrap.sh) — Idempotent post-install script (packages, symlinks, Mullvad+Tailscale nftables, 1Password SSH Git signing, optional `--secrets` bundle restore).
-- [vm-test.sh](vm-test.sh) — QEMU/KVM + OVMF dry-run harness to test-drive Omarchy v4.5.0 before touching `nvme1n1`.
+## One command after first boot into Omarchy
+```bash
+curl -fsSL https://raw.githubusercontent.com/jackmhny/dotfiles/main/omarchy/go | bash
+```
+This clones `~/dotfiles` and runs `bootstrap.sh`, which:
+- installs Tailscale, Chrome, Mullvad, Codex, Antigravity (`antigravity`, `antigravity-cli` = `agy`) and Hex (`hex-bin`)
+- links `hypr/bindings.lua` and the LazyVim config, then reloads Hyprland
+- installs the Mullvad+Tailscale nftables bypass
+- configures git for 1Password SSH signing
+- auto-detects `/boot/saxtonhale-secrets.tar.gz.gpg` (AES-256, passphrase in 1Password) and restores Wi-Fi profiles, SSH keys/config and Hex settings, then deletes the staged copy
 
-## 1. Dry-Run in QEMU/KVM (Optional, Recommended)
+## Files
+- `hypr/bindings.lua` — minimal Omarchy v4.5.0 override (Vim focus/swap, re-parked defaults, Antigravity/Codex binds)
+- `ssh/config` — unified SSH config
+- `mullvad/mullvad-tailscale-nft.service` — nftables bypass for 100.64.0.0/10
+- `bootstrap.sh` / `go` — post-install scripts
+- `vm-test.sh` — QEMU/KVM dry-run harness
+
+## Boot entry
 ```bash
-~/dotfiles/omarchy/vm-test.sh download
-~/dotfiles/omarchy/vm-test.sh install   # install Omarchy onto the 32G qcow2
-~/dotfiles/omarchy/vm-test.sh boot      # boot installed VM
-```
-Inside the VM:
-```bash
-git clone https://github.com/jackmhny/dotfiles ~/dotfiles
-~/dotfiles/omarchy/bootstrap.sh --skip-packages   # or full bootstrap.sh
+sudo efibootmgr --bootnext 0004 && sudo reboot   # one-shot into Omarchy
+sudo efibootmgr -o 0004,0001                      # make Omarchy default once happy
 ```
 
-## 2. Bare-Metal Install on `nvme1n1`
-1. Flash `~/Documents/OmarchyMigration/vm/omarchy-*-x86.iso` to a USB drive and boot it.
-2. Select **`nvme1n1` (238.5 GB Samsung)** as the target drive — leave `nvme0n1` (512 GB Debian) untouched.
-3. After first boot into Omarchy:
-```bash
-git clone https://github.com/jackmhny/dotfiles ~/dotfiles
-~/dotfiles/omarchy/bootstrap.sh --secrets /path/to/saxtonhale-secrets.tar.gz.gpg
+## Handoff prompt for a new Antigravity session on Omarchy
+```text
+I just migrated saxtonhale to Omarchy v4.5.0 on nvme1n1 and ran ~/dotfiles/omarchy/bootstrap.sh. Please verify Hyprland bindings (~/dotfiles/omarchy/hypr/bindings.lua), Tailscale, Mullvad+nftables, 1Password SSH Git signing, Hex (Alt+Space), Chrome, and Goodix fingerprint auth (27c6:6a94), make sure /boot/saxtonhale-secrets.tar.gz.gpg is deleted, and once everything looks good help me run sudo efibootmgr -o 0004,0001 to make Omarchy the default boot entry.
 ```
-(Pull the encrypted bundle from `scout:/mnt/storage/downloads/saxtonhale-secrets.tar.gz.gpg` or a USB stick.)
