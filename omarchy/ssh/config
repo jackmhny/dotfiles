@@ -1,0 +1,54 @@
+# Unified SSH config for saxtonhale (Omarchy)
+Include ~/.ssh/config_tailnet_mesh
+
+Host scout lg
+    HostName 100.64.0.3
+    User jackmhny
+    IdentityFile ~/.ssh/mykey
+
+Host soldier
+    HostName 100.64.0.5
+    User jackmhny
+    IdentityFile ~/.ssh/mykey
+
+Host heavy kingchud
+    HostName 209.145.51.192
+    User jackmhny
+    IdentityFile ~/.ssh/mykey
+
+Host coding2
+    HostName coding2.ecs.csus.edu
+    User jackmahoney
+    IdentityFile ~/.ssh/mykey
+
+Host rsync
+    HostName de4144.rsync.net
+    User de4144
+    IdentityFile ~/.ssh/mykey
+
+Host contabo
+    HostName 209.126.84.214
+    User root
+    Port 22
+    IdentityFile ~/.ssh/mykey
+
+Host NZXT
+    HostName 192.168.1.90
+    User jm
+    IdentityFile ~/.ssh/mykey
+
+Host rpi3b
+    HostName 192.168.1.66
+    User jm
+    Port 22
+    IdentityFile ~/.ssh/mykey
+
+Host rpi5
+    HostName 192.168.1.60
+
+Host alien
+    HostName 192.168.1.44
+
+Host demo
+    User jackmhny
+    IdentityFile ~/.ssh/mykey
