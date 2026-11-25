@@ -166,10 +166,13 @@ if [[ -n "$SECRETS_ARCHIVE" ]]; then
   fi
 
   # NetworkManager Wi-Fi profiles
-  if [[ -d "$STAGE/nm-connections" ]] && compgen -G "$STAGE/nm-connections/*.nmconnection" >/dev/null; then
+  if [[ -d "$STAGE/nm-connections" ]]; then
     sudo install -d -m 700 /etc/NetworkManager/system-connections
-    for f in "$STAGE/nm-connections/"*.nmconnection; do
-      sudo install -m 600 -o root -g root "$f" "/etc/NetworkManager/system-connections/$(basename "$f")"
+    for f in "$STAGE/nm-connections/"*; do
+      [[ -f "$f" ]] || continue
+      base="$(basename "$f")"
+      [[ "$base" == *.nmconnection ]] || base="${base}.nmconnection"
+      sudo install -m 600 -o root -g root "$f" "/etc/NetworkManager/system-connections/$base"
     done
     sudo nmcli connection reload || true
     echo "  imported NetworkManager Wi-Fi profiles"
