@@ -25,3 +25,6 @@ qutebrowser/quickmarks
 qutebrowser/sessions/
 qutebrowser/userscripts/.git
 qutebrowser/userscripts/pass.env
+
+# Local machine overlays: review before tracking or sharing
+/hosts/

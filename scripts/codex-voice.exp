@@ -1,0 +1,18 @@
+#!/usr/bin/expect -f
+# Run the slash command only after Codex reports that its TUI is ready.
+set timeout 60
+set dimensions [split [exec stty size] " "]
+stty rows [lindex $dimensions 0] columns [lindex $dimensions 1]
+spawn -noecho /home/jackmhny/.local/bin/codex --dangerously-bypass-approvals-and-sandbox -C /home/jackmhny
+trap {
+    set dimensions [split [exec stty size] " "]
+    stty rows [lindex $dimensions 0] columns [lindex $dimensions 1] < $spawn_out(slave,name)
+} WINCH
+expect {
+    -re {7501;state=idle:app=codex} { send -- "/voice\r" }
+    timeout { puts stderr "Codex startup took too long; enter /voice manually." }
+    eof { exit }
+}
+interact
+catch wait result
+exit [lindex $result 3]

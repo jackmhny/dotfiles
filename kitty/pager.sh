@@ -10,7 +10,7 @@ else
     AUTOCMD_TERMCLOSE_CMD="normal G"
 fi
 
-exec nvim 63<&0 0</dev/null \
+exec "$HOME/.local/bin/nvim" 63<&0 0</dev/null \
     -u NONE \
     -c "map <silent> q :qa!<CR>" \
     -c "set shell=bash scrollback=100000 notermguicolors laststatus=0 clipboard+=unnamedplus" \

@@ -23,8 +23,11 @@ exec --no-startup-id xrandr --dpi 120
 # notifyer
 exec --no-startup-id dunst
 
+# authentication prompts for privileged desktop actions
+exec --no-startup-id /usr/libexec/polkit-mate-authentication-agent-1
+
 # greenclip clipboard manager (keeps clipboard after closing windows)
-exec --no-startup-id greenclip daemon
+exec --no-startup-id sh -c 'systemctl --user import-environment DISPLAY XAUTHORITY; systemctl --user start greenclip.service'
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
@@ -70,16 +73,16 @@ exec --no-startup-id ~/.local/bin/wallpaper-switcher restore
     bindsym $mod+shift+w exec $file-manager
 
     # neovim
-    bindsym $mod+Shift+v exec $term -e nvim
+    bindsym $mod+Shift+v exec $term -e ~/.local/bin/nvim
 
     # neovim with Snacks smart picker (<leader><space>)
-    bindsym $mod+Shift+s exec $term -e nvim +"lua Snacks.picker.smart()"
+    bindsym $mod+Shift+s exec $term -e ~/.local/bin/nvim +"lua Snacks.picker.smart()"
 
     # emoji picker
     bindsym $mod+period exec rofimoji
 
     # clipboard history picker
-    bindsym $mod+c exec rofi -modi "clipboard:greenclip print" -show clipboard
+    bindsym $mod+c exec --no-startup-id ~/.local/bin/clipboard-history
 
     # wallpaper picker
     bindsym $mod+Shift+b exec --no-startup-id ~/.local/bin/wallpaper-switcher
@@ -229,11 +232,24 @@ for_window [class="^QuickAI$"] floating enable, border pixel 2, resize set 1200 
     bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
     bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
-    # brightnessctl
-    bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
-    bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 5%+
+    # Target the panel explicitly and prevent turning the backlight completely off.
+    bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -d intel_backlight --min-value=960 set 5%-
+    bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -d intel_backlight set 5%+
 
 bar {
     status_command ~/.local/bin/t3-i3status
     position bottom
 }
+
+# >>> jcode launch hotkeys (managed) >>>
+# jcode: home
+bindsym Mod4+semicolon exec --no-startup-id "/home/jackmhny/.jcode/hotkey/launch_jcode_0_cmd_semicolon.sh"
+# jcode: last project
+bindsym Mod4+apostrophe exec --no-startup-id "/home/jackmhny/.jcode/hotkey/launch_jcode_1_cmd_quote.sh"
+# jcode: self-dev
+bindsym Mod4+Shift+apostrophe exec --no-startup-id "/home/jackmhny/.jcode/hotkey/launch_jcode_2_cmd_shift_quote.sh"
+# <<< jcode launch hotkeys (managed) <<<
+
+# Codex shortcuts matched to JM’s active XFCE bindings
+bindsym $mod+y exec --no-startup-id ~/.local/bin/codex-hotkey
+bindsym $mod+Shift+y exec --no-startup-id ~/.local/bin/codex-hotkey voice

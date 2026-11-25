@@ -1,0 +1,20 @@
+Greenclip v4.2, x86_64 Linux
+Upstream: https://github.com/erebe/greenclip
+Asset: https://github.com/erebe/greenclip/releases/download/v4.2/greenclip
+SHA256 recorded after initial HTTPS download:
+80b189fc9ce2e0a56e33be642875f5c3fb53647465f8024a541621307a6a290f
+Upstream did not provide a release digest; the hash pins the installed artifact.
+
+Install executable at ~/.local/bin/greenclip with mode 755.
+Render config.toml.in with @HOME@ replaced by the actual home directory into
+~/.config/greenclip.toml, mode 600. Keep ~/.cache/greenclip private (mode 700).
+Do not put clipboard history into Git. The template uses a 50-item local history.
+Link ../scripts/clipboard-history into ~/.local/bin/clipboard-history.
+Link ../systemd/greenclip.service into ~/.config/systemd/user/greenclip.service.
+Import DISPLAY and XAUTHORITY into the user service manager, reload its units,
+and start greenclip.service. The i3 autostart now does this on login.
+Win+C runs clipboard-history. It selects content for later paste, not auto-typing.
+
+Verification: user service is active and greenclip print exits successfully.
+Live clipboard was not deliberately replaced for this verification. Picker
+selection itself still needs a manual check in your actual desktop session.

@@ -1,0 +1,10 @@
+[Unit]
+Description=Greenclip clipboard history for the X11 session
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/greenclip daemon
+Restart=on-failure
+RestartSec=3
+UMask=0077
+StandardOutput=null
+StandardError=null

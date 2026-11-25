@@ -1,0 +1,6 @@
+#!/bin/sh
+case "${1:-}" in
+    voice) exec /usr/bin/kitty --title 'Codex Voice' /home/jackmhny/.local/libexec/codex-voice.exp ;;
+    '') exec /usr/bin/kitty --title 'Codex' /home/jackmhny/.local/bin/codex --dangerously-bypass-approvals-and-sandbox -C /home/jackmhny ;;
+    *) exit 2 ;;
+esac
