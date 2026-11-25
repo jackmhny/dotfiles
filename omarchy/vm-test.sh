@@ -73,8 +73,10 @@ run_qemu() {
     -drive "if=pflash,format=raw,readonly=on,file=$OVMF_CODE" \
     -drive "if=pflash,format=raw,file=$OVMF_VARS" \
     -drive "file=$DISK,if=virtio,format=qcow2,cache=writeback" \
-    -device virtio-vga-gl \
-    -display gtk,gl=on \
+    -device virtio-vga,xres=1920,yres=1080 \
+    -display gtk,zoom-to-fit=on \
+    -device virtio-rng-pci \
+    -serial "file:$VM_DIR/serial.log" \
     -nic "user,model=virtio-net-pci,hostfwd=tcp:127.0.0.1:${SSH_PORT}-:22" \
     -qmp "unix:$QMP_SOCK,server=on,wait=off" \
     -device qemu-xhci \
