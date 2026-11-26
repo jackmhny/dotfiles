@@ -5,13 +5,12 @@
 - Development workspaces live in `/home/jackmhny/dev`.
 - User systemd units live in `/home/jackmhny/.config/systemd/user`.
 
-## Sudo On This Machine
+## Elevated Commands On This Machine
 
-Fingerprint auth works globally from the desktop session. For narrow admin actions, send a one-sentence dunst notification, then run normal `sudo` and let Jack press the fingerprint reader.
+Use `pkexec --disable-internal-agent` for narrow admin actions so the desktop Polkit GUI dialog pops up for fingerprint or password approval (instead of `sudo`, which hangs on a hidden TTY password prompt if fingerprint auth times out).
 
 ```sh
-dunstify -u normal -t 10000 "Agent sudo request" "<one sentence reason>" 2>/dev/null || true
-sudo <command>
+pkexec --disable-internal-agent <command>
 ```
 
-If fingerprint auth times out, say that and rerun the same narrow command once Jack is ready.
+For multi-step elevated actions, group them into a single `pkexec --disable-internal-agent sh -c '<commands>'` call so Jack only has to approve once. If the prompt is canceled or times out, report that and wait until Jack is ready to retry.

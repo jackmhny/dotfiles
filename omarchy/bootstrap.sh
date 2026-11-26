@@ -61,7 +61,8 @@ if [[ "$SKIP_PACKAGES" == "false" ]]; then
     AUR_HELPER="paru"
   fi
 
-  sudo pacman -S --needed --noconfirm tailscale nftables github-cli git-delta
+  sudo pacman -S --needed --noconfirm tailscale nftables github-cli git-delta git-crypt uv yt-dlp \
+    discord openconnect ncdu tree tig openssh python-websockets
 
   if [[ -n "$AUR_HELPER" ]]; then
     # Install each AUR package separately so one hiccup never blocks the rest.
@@ -84,6 +85,12 @@ if [[ "$SKIP_PACKAGES" == "false" ]]; then
   # Enable Tailscale
   sudo systemctl enable --now tailscaled.service
 
+  # Tailnet SSH mesh: sshd + allow port 22 only on tailscale0 through Omarchy's default-deny ufw
+  sudo systemctl enable --now sshd.service || true
+  if command -v ufw >/dev/null 2>&1; then
+    sudo ufw allow in on tailscale0 to any port 22 proto tcp comment 'tailnet-ssh' || true
+  fi
+
   # Set Google Chrome as default browser (Omarchy-aware)
   if command -v omarchy-default-browser >/dev/null 2>&1; then
     omarchy-default-browser google-chrome || true
@@ -102,6 +109,49 @@ log "Linking Hyprland bindings.lua and LazyVim config"
 link_with_backup "$DOTFILES_DIR/omarchy/hypr/bindings.lua" "$HOME/.config/hypr/bindings.lua"
 link_with_backup "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 hyprctl reload >/dev/null 2>&1 || true
+
+# 2b. Global AGENTS.md (pkexec rule) + personal bash aliases
+log "Linking AGENTS.md and bash aliases"
+mkdir -p "$HOME/.gemini/config" "$HOME/.codex"
+link_with_backup "$DOTFILES_DIR/omarchy/AGENTS.md" "$HOME/AGENTS.md"
+link_with_backup "$DOTFILES_DIR/omarchy/AGENTS.md" "$HOME/.gemini/config/AGENTS.md"
+link_with_backup "$DOTFILES_DIR/omarchy/AGENTS.md" "$HOME/.codex/AGENTS.md"
+if ! grep -Fq "omarchy/bash/aliases.sh" "$HOME/.bashrc" 2>/dev/null; then
+  printf '\n# Jack personal aliases\n[ -f "%s/omarchy/bash/aliases.sh" ] && source "%s/omarchy/bash/aliases.sh"\n' \
+    "$DOTFILES_DIR" "$DOTFILES_DIR" >> "$HOME/.bashrc"
+fi
+
+# 2c. 1Password MCP + CLI smoothing
+log "Configuring 1Password MCP & CLI integration"
+MCP_BIN=/opt/1Password/1password-mcp
+if [[ -x "$MCP_BIN" && ! -g "$MCP_BIN" ]]; then
+  # Arch AUR 1password packages can miss the setgid bit ("Linux peer effective GID check failed")
+  if [[ -x /opt/1Password/after-install.sh ]]; then
+    sudo /opt/1Password/after-install.sh || true
+  else
+    sudo groupadd -f onepassword-mcp && sudo chgrp onepassword-mcp "$MCP_BIN" && sudo chmod 2755 "$MCP_BIN" || true
+  fi
+fi
+mkdir -p "$HOME/.gemini/config"
+python3 - <<'PY'
+import json, pathlib
+p = pathlib.Path.home() / ".gemini/config/mcp_config.json"
+try:
+    d = json.loads(p.read_text())
+except Exception:
+    d = {}
+d.setdefault("mcpServers", {})["1password"] = {"command": "/opt/1Password/1password-mcp", "args": []}
+p.write_text(json.dumps(d, indent=2) + "\n")
+PY
+touch "$HOME/.codex/config.toml"
+if ! grep -Fq "[mcp_servers.1password]" "$HOME/.codex/config.toml"; then
+  printf '\n[mcp_servers.1password]\ncommand = "/opt/1Password/1password-mcp"\nargs = []\n' >> "$HOME/.codex/config.toml"
+fi
+# A legacy standalone op config keeps `op` in standalone mode instead of the desktop app
+if [[ -f "$HOME/.config/op/config" ]]; then
+  mv "$HOME/.config/op/config" "$HOME/.config/op/config.bak"
+  echo "  moved legacy ~/.config/op/config aside"
+fi
 
 # 3. Install Mullvad + Tailscale nftables bypass rule
 log "Installing Mullvad + Tailscale nftables bypass"
@@ -205,11 +255,17 @@ fi
 log "Bootstrap complete!"
 cat <<'NEXT'
 Remaining interactive steps:
-  1. Launch Antigravity (Super+Shift+A, or `antigravity` / `agy`) and sign in; it can finish verification for you.
-  2. Sign into 1Password (Super+Shift+/) -> Settings -> Developer -> enable SSH Agent & Git commit signing
-     (then paste your SSH public key into ~/.config/git/config under [user] signingkey).
-  3. Run: sudo tailscale up
+  1. Run: omarchy-setup-security-fingerprint  (Goodix -> sudo, polkit/pkexec, hyprlock)
+  2. Sign into 1Password (Super+Shift+/) -> Settings -> Developer -> enable ALL of:
+       SSH Agent (+ Git commit signing; paste pubkey into ~/.config/git/config signingkey),
+       Integrate with 1Password CLI, MCP integration, SDK integration.
+     (If `op` ran before toggling: rm -f /run/user/$UID/op-daemon.* and restart 1Password.)
+  3. Run: sudo tailscale up --login-server=https://headscale.jackmhny.xyz
+     (verify node in Headplane; refresh ~/.ssh/known_hosts_tailnet_mesh if a host key changed)
   4. Run: gh auth login
-  5. Sign into Chrome (Super+Shift+B). Test binds: Super+H/J/K/L, Super+Ctrl+/, Super+Shift+A.
-  6. When happy, make Omarchy the default boot: sudo efibootmgr -o 0004,0001
+  5. Launch Antigravity (Super+Shift+A / antigravity / agy), sign in, reinstall + sign into the
+     Google Workspace and Notion plugins (optionally Chrome DevTools), paste the handoff prompt.
+  6. Sign into Chrome (Super+Shift+B). Test binds: Super+H/J/K/L, Super+Ctrl+/, Super+Shift+A, Alt+Space.
+  7. Add Debian to Limine: sudo limine-scan (or add the chainload block to /boot/limine.conf).
+     UEFI BootOrder is already 0004 (Omarchy), 0001 (Debian); revert: sudo efibootmgr -o 0001,0004
 NEXT

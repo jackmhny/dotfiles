@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 
-eval $(op signin)
+if ! op whoami >/dev/null 2>&1; then
+  eval "$(op signin)"
+fi
 
 CSUS_PASS=$(op item get "Csus" --field password --reveal)
 
