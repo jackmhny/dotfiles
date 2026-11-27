@@ -10,6 +10,7 @@ import secrets
 from shutil import which
 import ssl
 import subprocess
+from tempfile import TemporaryDirectory
 from time import monotonic, sleep
 from urllib.parse import urlencode
 
@@ -18,6 +19,7 @@ from websockets.sync.client import connect
 
 VIEWER = "https://100.64.0.12:6901/"
 STREAM = "wss://100.64.0.12:6901/ws"
+REMOTE_CA = 'cat "$HOME/.config/voxl/ca.pem"'
 PREPARE_REMOTE = """\
 set -eu
 session=$(systemctl --user show-environment)
@@ -61,11 +63,11 @@ def ssh(command, script=None):
     return result.stdout.strip()
 
 
-def receives_video(password):
+def receives_video(password, tls_context):
     try:
         with connect(
             STREAM, additional_headers={"Authorization": "Bearer " + password},
-            ssl=ssl.create_default_context(), proxy=None, open_timeout=4, close_timeout=0.3,
+            ssl=tls_context, proxy=None, open_timeout=4, close_timeout=0.3,
         ) as stream:
             stream.send("v,1")
             deadline = monotonic() + 5
@@ -84,22 +86,44 @@ def receives_video(password):
     return False
 
 
-def ready_password():
+def ready_password(tls_context):
     password = ssh("/bin/sh -s", PREPARE_REMOTE)
     if not re.fullmatch(r"[!-~]+", password):
         raise RuntimeError("JM returned an invalid Voxl password.")
-    if receives_video(password):
+    if receives_video(password, tls_context):
         return password
 
     ssh("systemctl --user restart voxl.service")
     for delay in (0.5, 1, 2):
         sleep(delay)
-        if receives_video(password):
+        if receives_video(password, tls_context):
             return password
     raise RuntimeError("Voxl restarted on JM but did not deliver a video frame.")
 
 
-def open_viewer(browser, password):
+def configure_browser_trust(profile, ca_certificate):
+    # Chrome shares its NSS database between profiles. Use a separate home as well.
+    nss_db = profile / ".pki/nssdb"
+    nss_db.mkdir(parents=True)
+    certutil = ["certutil", "-d", f"sql:{nss_db}"]
+    try:
+        subprocess.run([*certutil, "-N", "--empty-password"], check=True)
+        subprocess.run(
+            [*certutil, "-A", "-n", "JM Voxl Private CA", "-t", "C,,"],
+            input=ca_certificate, text=True, check=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        raise RuntimeError("Could not set up certificate trust for the JM Screen browser.") from None
+
+
+def open_viewer(browser, password, profile):
+    browser_env = dict(
+        os.environ,
+        HOME=str(profile),
+        XDG_CONFIG_HOME=str(profile / "config"),
+        XDG_DATA_HOME=str(profile / "data"),
+        XDG_CACHE_HOME=str(profile / "cache"),
+    )
     launch_path = "/jm-screen-" + secrets.token_urlsafe(24)
     opened = False
 
@@ -127,27 +151,43 @@ def open_viewer(browser, password):
     with HTTPServer(("127.0.0.1", 0), LaunchRequest) as server:
         server.timeout = 0.5
         url = f"http://127.0.0.1:{server.server_port}{launch_path}"
-        subprocess.Popen(
-            [browser, "--incognito", "--app=" + url],
+        process = subprocess.Popen(
+            [browser, "--no-first-run", "--no-default-browser-check",
+             f"--user-data-dir={profile / 'chrome'}", "--incognito", "--app=" + url],
             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            start_new_session=True,
+            env=browser_env, start_new_session=True,
         )
         deadline = monotonic() + 15
-        while not opened and monotonic() < deadline:
+        while not opened and process.poll() is None and monotonic() < deadline:
             server.handle_request()
     if not opened:
+        if process.poll() is None:
+            process.terminate()
+            process.wait()
         raise RuntimeError("Chrome did not open the JM Screen viewer.")
+    process.wait()
 
 
 def launch():
-    browser = which("google-chrome") or which("chromium")
+    browser = which("google-chrome") or which("google-chrome-stable") or which("chromium")
     if not browser:
         raise RuntimeError("JM Screen needs Chrome or Chromium to open the viewer.")
     runtime_dir = Path(os.environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}")
+    try:
+        ca_certificate = ssh(REMOTE_CA) + "\n"
+        tls_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        tls_context.load_verify_locations(cadata=ca_certificate)
+    except (RuntimeError, ssl.SSLError) as error:
+        raise RuntimeError(f"Could not load JM's Voxl certificate authority. {error}") from None
+
     with (runtime_dir / "jm-screen.lock").open("a") as lock:
         flock(lock, LOCK_EX)
-        password = ready_password()
-    open_viewer(browser, password)
+        password = ready_password(tls_context)
+
+    with TemporaryDirectory(prefix="jm-screen-", dir=runtime_dir) as profile_dir:
+        profile = Path(profile_dir)
+        configure_browser_trust(profile, ca_certificate)
+        open_viewer(browser, password, profile)
 
 
 if __name__ == "__main__":

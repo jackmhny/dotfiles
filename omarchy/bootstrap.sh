@@ -112,9 +112,20 @@ if [[ "$SKIP_PACKAGES" == "false" ]]; then
 fi
 
 # 2. Link Omarchy Hyprland bindings override & LazyVim Neovim config
-log "Linking Hyprland bindings.lua and LazyVim config"
+log "Linking Hyprland bindings.lua, input repeat-rate, and LazyVim config"
 link_with_backup "$DOTFILES_DIR/omarchy/hypr/bindings.lua" "$HOME/.config/hypr/bindings.lua"
 link_with_backup "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
+if [[ -f "$HOME/.config/hypr/input.lua" ]]; then
+  python3 - "$HOME/.config/hypr/input.lua" <<'PY'
+import pathlib, re, sys
+p = pathlib.Path(sys.argv[1])
+txt = p.read_text()
+txt = re.sub(r'^\s*(--\s*)?repeat_rate\s*=\s*\d+,?', '    repeat_rate = 25,', txt, flags=re.M)
+txt = re.sub(r'^\s*(--\s*)?repeat_delay\s*=\s*\d+,?', '    repeat_delay = 660,', txt, flags=re.M)
+p.write_text(txt)
+PY
+  echo "  configured Hyprland input.lua repeat_rate=25, repeat_delay=660"
+fi
 hyprctl reload >/dev/null 2>&1 || true
 
 # 2b. Global AGENTS.md (pkexec rule) + personal bash aliases
@@ -282,6 +293,19 @@ if [[ -n "$SECRETS_ARCHIVE" ]]; then
     sudo rm -f /boot/saxtonhale-secrets.tar.gz.gpg /boot/saxtonhale-secrets.tar.gz.gpg.sha256
     echo "  removed staged secrets bundle from /boot"
   fi
+fi
+
+# 5b. Optional: auto-join Tailnet & install SSH authorized_keys from OMARCHY_JOIN USB partition
+if [[ -b /dev/disk/by-label/OMARCHY_JOIN ]]; then
+  log "Found OMARCHY_JOIN partition on USB — joining Headscale tailnet & installing SSH authorized_keys"
+  JOIN_MNT="$(mktemp -d)"
+  if sudo mount -o rw,uid="$(id -u)",gid="$(id -g)",umask=0077 /dev/disk/by-label/OMARCHY_JOIN "$JOIN_MNT"; then
+    if [[ -f "$JOIN_MNT/join-tailnet.sh" ]]; then
+      bash "$JOIN_MNT/join-tailnet.sh" || echo "  [warn] join-tailnet.sh reported an issue; re-run manually from OMARCHY_JOIN"
+    fi
+    sudo umount "$JOIN_MNT" || true
+  fi
+  rmdir "$JOIN_MNT" 2>/dev/null || true
 fi
 
 log "Bootstrap complete!"
