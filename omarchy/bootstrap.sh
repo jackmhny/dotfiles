@@ -295,13 +295,13 @@ if [[ -n "$SECRETS_ARCHIVE" ]]; then
   fi
 fi
 
-# 5b. Optional: auto-join Tailnet & install SSH authorized_keys from OMARCHY_JOIN USB partition
-if [[ -b /dev/disk/by-label/OMARCHY_JOIN ]]; then
-  log "Found OMARCHY_JOIN partition on USB — joining Headscale tailnet & installing SSH authorized_keys"
+# 5b. Optional: auto-join Tailnet & install SSH authorized_keys from OMARCHYJOIN USB partition
+if [[ -b /dev/disk/by-label/OMARCHYJOIN ]]; then
+  log "Found OMARCHYJOIN partition on USB — joining Headscale tailnet & installing SSH authorized_keys"
   JOIN_MNT="$(mktemp -d)"
-  if sudo mount -o rw,uid="$(id -u)",gid="$(id -g)",umask=0077 /dev/disk/by-label/OMARCHY_JOIN "$JOIN_MNT"; then
+  if sudo mount -o rw,uid="$(id -u)",gid="$(id -g)",umask=0077 /dev/disk/by-label/OMARCHYJOIN "$JOIN_MNT"; then
     if [[ -f "$JOIN_MNT/join-tailnet.sh" ]]; then
-      bash "$JOIN_MNT/join-tailnet.sh" || echo "  [warn] join-tailnet.sh reported an issue; re-run manually from OMARCHY_JOIN"
+      bash "$JOIN_MNT/join-tailnet.sh" || echo "  [warn] join-tailnet.sh reported an issue; re-run manually from OMARCHYJOIN"
     fi
     sudo umount "$JOIN_MNT" || true
   fi
