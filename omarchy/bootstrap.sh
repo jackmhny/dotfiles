@@ -62,7 +62,7 @@ if [[ "$SKIP_PACKAGES" == "false" ]]; then
   fi
 
   sudo pacman -S --needed --noconfirm tailscale nftables github-cli git-delta git-crypt uv yt-dlp \
-    discord openconnect ncdu tree tig openssh python-websockets
+    discord openconnect ncdu tree tig openssh rsync python-websockets
 
   # Carryover extras: installed one at a time so a missing package never blocks the rest
   for pkg in deskflow virt-manager qemu-desktop libvirt dnsmasq edk2-ovmf \
@@ -269,6 +269,31 @@ if [[ -n "$SECRETS_ARCHIVE" ]]; then
     echo "  imported NetworkManager Wi-Fi profiles"
   fi
 
+  # Tailscale machine identity (keeps saxtonhale at 100.64.0.9 on Headscale)
+  if [[ -f "$STAGE/tailscale/tailscaled.state" ]]; then
+    sudo systemctl stop tailscaled.service 2>/dev/null || true
+    sudo install -d -m 700 -o root -g root /var/lib/tailscale
+    sudo install -m 600 -o root -g root "$STAGE/tailscale/tailscaled.state" /var/lib/tailscale/tailscaled.state
+    sudo systemctl enable --now tailscaled.service || true
+    echo "  restored /var/lib/tailscale/tailscaled.state"
+  fi
+
+  # SSH host keys (keeps pinned mesh-saxtonhale fingerprint across Heavy/JM/Mercury)
+  if [[ -d "$STAGE/ssh-host" ]]; then
+    sudo systemctl stop sshd.service 2>/dev/null || true
+    sudo install -d -m 755 -o root -g root /etc/ssh
+    for f in "$STAGE/ssh-host/"ssh_host_*_key; do
+      [[ -f "$f" ]] || continue
+      sudo install -m 600 -o root -g root "$f" "/etc/ssh/$(basename "$f")"
+    done
+    for f in "$STAGE/ssh-host/"ssh_host_*_key.pub; do
+      [[ -f "$f" ]] || continue
+      sudo install -m 644 -o root -g root "$f" "/etc/ssh/$(basename "$f")"
+    done
+    sudo systemctl enable --now sshd.service || true
+    echo "  restored /etc/ssh/ssh_host_* keys"
+  fi
+
   # Remove the staged copies from the ESP once restored.
   if [[ "$SECRETS_ARCHIVE" == /boot/* && -d "$STAGE" ]]; then
     sudo rm -f /boot/saxtonhale-secrets.tar.gz.gpg /boot/saxtonhale-secrets.tar.gz.gpg.sha256
@@ -284,11 +309,13 @@ Remaining interactive steps:
        SSH Agent (+ Git commit signing; paste pubkey into ~/.config/git/config signingkey),
        Integrate with 1Password CLI, MCP integration, SDK integration.
      (If `op` ran before toggling: rm -f /run/user/$UID/op-daemon.* and restart 1Password.)
-  3. Run: sudo tailscale up --login-server=https://headscale.jackmhny.xyz
-     (verify node in Headplane; refresh ~/.ssh/known_hosts_tailnet_mesh if a host key changed)
+  3. Verify Tailscale auto-reconnected as 100.64.0.9: tailscale status
+     (fallback only if not connected: sudo tailscale up --login-server=https://headscale.jackmhny.xyz)
   4. Run: gh auth login
-  5. Launch Antigravity (Super+Shift+A / antigravity / agy), sign in, reinstall + sign into the
-     Google Workspace and Notion plugins (optionally Chrome DevTools), paste the handoff prompt.
+  5. Restore prior Antigravity chats from Scout:
+       ~/dotfiles/omarchy/restore-antigravity-chats.sh --stop
+     Then launch Antigravity (Super+Shift+A / antigravity / agy), sign in, reinstall + sign into
+     the Google Workspace and Notion plugins (optionally Chrome DevTools), paste the handoff prompt.
   6. Sign into Chrome (Super+Shift+B). Test binds: Super+H/J/K/L, Super+Ctrl+/, Super+Shift+A, Alt+Space.
   7. Add Debian to Limine: sudo limine-scan (or add the chainload block to /boot/limine.conf).
      UEFI BootOrder is already 0004 (Omarchy), 0001 (Debian); revert: sudo efibootmgr -o 0001,0004
