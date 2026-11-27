@@ -30,11 +30,11 @@ This clones `~/dotfiles` and runs `bootstrap.sh`, which:
 - `ssh/config` - unified SSH config
 - `mullvad/mullvad-tailscale-nft.service` - nftables bypass for 100.64.0.0/10
 - `bootstrap.sh` / `go` - post-install scripts
-- `restore-antigravity-chats.sh` - pulls (or `--backup` pushes) Antigravity Desktop + CLI chats via Scout
+- `restore-antigravity-chats.sh` - pulls (or `--backup` pushes) Antigravity Desktop + CLI chats via Heavy
 - `vm-test.sh` - QEMU/KVM dry-run harness
 
 ## Restore Antigravity chats
-Once Tailscale is up (and `~/.ssh/mykey` is restored from the secrets bundle), pull down all Desktop + `agy` CLI chats, artifacts, summaries, and project metadata from `scout`:
+Once `~/.ssh/` is restored from the secrets bundle (works via `mesh-heavy` on Tailscale or `heavy` over public SSH), pull down all Desktop + `agy` CLI chats, artifacts, summaries, and project metadata from `heavy`:
 ```bash
 ~/dotfiles/omarchy/restore-antigravity-chats.sh --stop
 ```

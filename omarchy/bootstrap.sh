@@ -312,7 +312,7 @@ Remaining interactive steps:
   3. Verify Tailscale auto-reconnected as 100.64.0.9: tailscale status
      (fallback only if not connected: sudo tailscale up --login-server=https://headscale.jackmhny.xyz)
   4. Run: gh auth login
-  5. Restore prior Antigravity chats from Scout:
+  5. Restore prior Antigravity chats from Heavy:
        ~/dotfiles/omarchy/restore-antigravity-chats.sh --stop
      Then launch Antigravity (Super+Shift+A / antigravity / agy), sign in, reinstall + sign into
      the Google Workspace and Notion plugins (optionally Chrome DevTools), paste the handoff prompt.
