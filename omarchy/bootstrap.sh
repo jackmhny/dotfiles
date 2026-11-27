@@ -76,12 +76,12 @@ if [[ "$SKIP_PACKAGES" == "false" ]]; then
 
   if [[ -n "$AUR_HELPER" ]]; then
     # Install each AUR package separately so one hiccup never blocks the rest.
-    for pkg in google-chrome mullvad-vpn-bin antigravity antigravity-cli zoom; do
+    for pkg in google-chrome mullvad-vpn-bin zoom; do
       "$AUR_HELPER" -S --needed --noconfirm "$pkg" \
         || echo "  [warn] AUR install failed for $pkg (retry later: $AUR_HELPER -S $pkg)"
     done
   else
-    echo "  [note] No AUR helper (yay/paru) found; install: google-chrome mullvad-vpn-bin antigravity antigravity-cli zoom"
+    echo "  [note] No AUR helper (yay/paru) found; install: google-chrome mullvad-vpn-bin zoom"
   fi
 
   # Codex CLI (via npm/mise if node is present)
