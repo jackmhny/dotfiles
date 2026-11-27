@@ -64,9 +64,21 @@ if [[ "$SKIP_PACKAGES" == "false" ]]; then
   sudo pacman -S --needed --noconfirm tailscale nftables github-cli git-delta git-crypt uv yt-dlp \
     discord openconnect ncdu tree tig openssh python-websockets
 
+  # Carryover extras: installed one at a time so a missing package never blocks the rest
+  for pkg in deskflow virt-manager qemu-desktop libvirt dnsmasq edk2-ovmf \
+      cmake gdb ninja shellcheck strace lsof wget bind nmap jdk-openjdk pandoc-cli \
+      texlive-basic texlive-latex texlive-latexrecommended texlive-latexextra \
+      qbittorrent zathura zathura-pdf-mupdf torbrowser-launcher prismlauncher; do
+    sudo pacman -S --needed --noconfirm "$pkg" || echo "  [warn] pacman install failed for $pkg"
+  done
+  sudo pacman -S --needed --noconfirm steam || echo "  [warn] steam failed (enable [multilib] or run omarchy-install-gaming-steam)"
+  command -v omarchy-install-gaming-gpu-lib32 >/dev/null 2>&1 && { omarchy-install-gaming-gpu-lib32 || true; }
+  sudo systemctl enable --now libvirtd.service || true
+  sudo usermod -aG libvirt "$USER" || true
+
   if [[ -n "$AUR_HELPER" ]]; then
     # Install each AUR package separately so one hiccup never blocks the rest.
-    for pkg in google-chrome mullvad-vpn-bin antigravity antigravity-cli hex-bin; do
+    for pkg in google-chrome mullvad-vpn-bin antigravity antigravity-cli hex-bin zoom; do
       "$AUR_HELPER" -S --needed --noconfirm "$pkg" \
         || echo "  [warn] AUR install failed for $pkg (retry later: $AUR_HELPER -S $pkg)"
     done
@@ -120,6 +132,18 @@ if ! grep -Fq "omarchy/bash/aliases.sh" "$HOME/.bashrc" 2>/dev/null; then
   printf '\n# Jack personal aliases\n[ -f "%s/omarchy/bash/aliases.sh" ] && source "%s/omarchy/bash/aliases.sh"\n' \
     "$DOTFILES_DIR" "$DOTFILES_DIR" >> "$HOME/.bashrc"
 fi
+
+# 2d. jm-screen / mercury-screen
+log "Linking jm-screen and mercury-screen"
+SCR="$DOTFILES_DIR/omarchy/screen"
+link_with_backup "$SCR/bin/jm-screen" "$HOME/.local/bin/jm-screen"
+link_with_backup "$SCR/bin/mercury-screen" "$HOME/.local/bin/mercury-screen"
+link_with_backup "$SCR/applications/jm-screen.desktop" "$HOME/.local/share/applications/jm-screen.desktop"
+link_with_backup "$SCR/applications/mercury-screen.desktop" "$HOME/.local/share/applications/mercury-screen.desktop"
+link_with_backup "$SCR/systemd/mercury-screen.service" "$HOME/.config/systemd/user/mercury-screen.service"
+link_with_backup "$SCR/systemd/mercury-screen.socket" "$HOME/.config/systemd/user/mercury-screen.socket"
+link_with_backup "$SCR/config/connection.ini" "$HOME/.config/mercury-screen/connection.ini"
+systemctl --user daemon-reload >/dev/null 2>&1 || true
 
 # 2c. 1Password MCP + CLI smoothing
 log "Configuring 1Password MCP & CLI integration"

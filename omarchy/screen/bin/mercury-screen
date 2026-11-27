@@ -1,0 +1,233 @@
+#!/usr/bin/python3
+"""Open Mercury's existing screen relay in a Chrome app window."""
+
+from configparser import ConfigParser, Error as ConfigError
+from contextlib import closing
+from fcntl import LOCK_EX, flock
+from http.client import HTTPConnection, HTTPException
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from inspect import signature
+import os
+from pathlib import Path
+import re
+import secrets
+from shlex import quote
+from shutil import which
+import subprocess
+from time import monotonic, sleep
+
+HOST = "127.0.0.1"
+PORT = 18117
+VIEWER = f"http://{HOST}:{PORT}/"
+PREPARE_REMOTE = """\
+set -eu
+
+job="gui/$(/usr/bin/id -u)/$1"
+display=$(/usr/bin/pmset -g log | /usr/bin/awk '
+    /Display is turned (on|off)/ { event = $0 }
+    END { if (event ~ /Display is turned off/) print "asleep" }
+')
+# Simulate user activity to wake the display and keep it awake during recovery.
+/usr/bin/nohup /usr/bin/caffeinate -d -u -t 150 </dev/null >/dev/null 2>&1 &
+wake_pid=$!
+/bin/sleep 1
+kill -0 "$wake_pid" 2>/dev/null || exit 20
+if [ "$display" = asleep ]; then
+    # A sleeping display can leave HTTP up while the old capture worker exits.
+    /bin/sleep 8
+fi
+
+wait_for_relay() {
+    for _ in $(/usr/bin/seq "$1"); do
+        # The unauthenticated endpoint returns 401 when the relay is serving.
+        status=$(/usr/bin/curl --noproxy '*' --silent --max-time 1 \\
+            --header 'Host: 127.0.0.1:18117' --output /dev/null --write-out '%{http_code}' \\
+            http://127.0.0.1:28081/capabilities) || status=
+        [ "$status" = 401 ] && return 0
+        /bin/sleep 1
+    done
+    return 1
+}
+
+if [ "$2" = restart ] || ! wait_for_relay 3; then
+    /bin/launchctl kickstart -k "$job" >/dev/null || exit 21
+    wait_for_relay 10 || exit 22
+    printf 'restarted\\n'
+else
+    printf 'ready\\n'
+fi
+printf '%s\\n' "${display:-awake}"
+/bin/cat "$HOME/Library/Application Support/Mercury/Screen Relay/token" || exit 23
+"""
+
+
+def prepare_mercury(action="wake"):
+    config_dir = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+    config = ConfigParser(interpolation=None)
+    try:
+        config.read(config_dir / "mercury-screen" / "connection.ini")
+        ssh_host = config["mercury"]["ssh_host"]
+        label = config["mercury"]["launch_agent"]
+    except (ConfigError, KeyError):
+        raise RuntimeError("Run the Mercury Screen installer to configure the connection.") from None
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", ssh_host) or not re.fullmatch(
+        r"[A-Za-z0-9][A-Za-z0-9._-]*", label
+    ):
+        raise RuntimeError("Check the SSH host and LaunchAgent label in the Mercury Screen configuration.")
+
+    try:
+        result = subprocess.run(
+            ["/usr/bin/ssh", "-T", "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=yes",
+             "-o", "ConnectTimeout=5",
+             ssh_host, "/bin/sh -s -- " + quote(label) + " " + action],
+            input=PREPARE_REMOTE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=110,
+            text=True,
+        )
+    except subprocess.TimeoutExpired:
+        raise RuntimeError("Mercury took too long to wake and start the relay. Try again.") from None
+    errors = {
+        20: "Mercury could not wake its display.",
+        21: "Mercury could not restart its screen relay LaunchAgent.",
+        22: "Mercury's relay did not become ready after restarting.",
+        23: "Mercury could not read its screen relay token.",
+    }
+    if result.returncode:
+        raise RuntimeError(errors.get(result.returncode, "Could not connect to Mercury over SSH."))
+    reply = re.fullmatch(r"(ready|restarted)\n(awake|asleep)\n([0-9a-f]{64})", result.stdout.strip())
+    if reply is None:
+        raise RuntimeError("Mercury returned invalid relay settings.")
+    state, display, token = reply.groups()
+    return token, state == "restarted", display == "asleep"
+
+
+def check_local_relay(token):
+    for attempt in range(3):
+        if attempt:
+            sleep(0.5)
+        try:
+            with closing(HTTPConnection(HOST, PORT, timeout=2)) as connection:
+                connection.request("GET", "/capabilities", headers={"Authorization": "Bearer " + token})
+                status = connection.getresponse().status
+        except (OSError, HTTPException):
+            continue
+        if status == 200:
+            return
+        if status == 401:
+            raise RuntimeError("Mercury rejected its relay token.")
+    raise RuntimeError("Mercury's relay is running, but the laptop could not reach it through the tailnet.")
+
+
+def receives_video(token):
+    from websockets.exceptions import WebSocketException
+    from websockets.sync.client import connect
+
+    try:
+        with connect(
+            f"ws://{HOST}:{PORT}/stream?view=1",
+            origin=VIEWER.rstrip("/"),
+            subprotocols=["nsl1", "bearer." + token],
+            proxy=None, open_timeout=3, close_timeout=0.3,
+        ) as stream:
+            deadline = monotonic() + 5
+            while (remaining := deadline - monotonic()) > 0:
+                packet = stream.recv(timeout=remaining)
+                if isinstance(packet, bytes) and len(packet) > 20 and packet[5] == 1:
+                    return True
+    except (OSError, WebSocketException):
+        pass
+    return False
+
+
+def ready_token():
+    token, restarted, was_asleep = prepare_mercury()
+    check_local_relay(token)
+    video_ready = receives_video(token)
+    if video_ready and was_asleep:
+        # The old capture worker may deliver a frame before detecting display sleep.
+        sleep(4)
+        video_ready = receives_video(token)
+    if not video_ready and not restarted:
+        # KeepAlive may already be starting a replacement capture worker.
+        sleep(2)
+        video_ready = receives_video(token)
+        if not video_ready:
+            token, _, _ = prepare_mercury("restart")
+            check_local_relay(token)
+            video_ready = receives_video(token)
+    if not video_ready:
+        raise RuntimeError("Mercury's relay restarted but did not deliver a video frame.")
+    return token
+
+
+def launch():
+    browser = which("google-chrome") or which("chromium")
+    if browser is None:
+        raise RuntimeError("Mercury Screen needs Chrome or Chromium to open the viewer.")
+    try:
+        from websockets.sync.client import connect
+    except ImportError:
+        raise RuntimeError("Mercury Screen needs Python websockets 15 or newer.") from None
+    if "proxy" not in signature(connect).parameters:
+        raise RuntimeError("Mercury Screen needs Python websockets 15 or newer.")
+    subprocess.run(
+        ["/usr/bin/systemctl", "--user", "start", "mercury-screen.socket"],
+        check=True, timeout=5,
+    )
+    runtime_dir = Path(os.environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}")
+    with (runtime_dir / "mercury-screen.lock").open("a") as lock:
+        flock(lock, LOCK_EX)
+        token = ready_token()
+    launch_path = "/mercury-screen-" + secrets.token_urlsafe(24)
+    opened = False
+
+    class LaunchRequest(BaseHTTPRequestHandler):
+        timeout = 2
+
+        def log_message(self, *_args):
+            pass
+
+        def do_GET(self):
+            nonlocal opened
+            if self.path != launch_path or opened:
+                self.send_error(404)
+                return
+
+            self.send_response(302)
+            self.send_header("Location", VIEWER + "#token=" + token)
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Referrer-Policy", "no-referrer")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            opened = True
+
+    # Hand Chrome the token in a one-time redirect instead of a process argument.
+    with HTTPServer((HOST, 0), LaunchRequest) as server:
+        server.timeout = 0.5
+        launch_url = f"http://{HOST}:{server.server_port}{launch_path}"
+        subprocess.Popen(
+            [browser, "--app=" + launch_url],
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        deadline = monotonic() + 15
+        while not opened and monotonic() < deadline:
+            server.handle_request()
+    if not opened:
+        raise RuntimeError("Chrome did not open the relay")
+
+
+if __name__ == "__main__":
+    try:
+        launch()
+    except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+        # Keep command output and credentials out of desktop notifications.
+        message = "Could not open Mercury. Check the tailnet connection and try again."
+        if isinstance(error, RuntimeError):
+            message = str(error)
+        notifier = which("notify-send")
+        if notifier:
+            subprocess.run([notifier, "Mercury Screen", message], check=False)
+        raise SystemExit(message) from None

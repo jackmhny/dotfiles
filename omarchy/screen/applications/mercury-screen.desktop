@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Mercury Screen
+Comment=Open Mercury's screen relay
+Exec="/home/jackmhny/.local/bin/mercury-screen"
+Icon=video-display
+Terminal=false
+Categories=Network;RemoteAccess;

@@ -1,0 +1,7 @@
+[Unit]
+Description=Proxy Mercury Screen over the tailnet
+Requires=mercury-screen.socket
+After=mercury-screen.socket
+
+[Service]
+ExecStart=/usr/lib/systemd/systemd-socket-proxyd --exit-idle-time=15s 100.64.0.17:28444

@@ -9,6 +9,8 @@ curl -fsSL https://raw.githubusercontent.com/jackmhny/dotfiles/main/omarchy/go |
 ```
 This clones `~/dotfiles` and runs `bootstrap.sh`, which:
 - installs Tailscale, Chrome, Mullvad, Codex, Antigravity (`antigravity`, `antigravity-cli` = `agy`), Hex (`hex-bin`) and extras (`git-crypt uv yt-dlp discord openconnect ncdu tree tig openssh python-websockets`)
+- installs carryover apps: deskflow, virt-manager/QEMU, LaTeX + Pandoc, OpenJDK, C/script dev tools (cmake gdb ninja shellcheck nmap...), Zoom, qBittorrent, Zathura, Tor Browser, Prism Launcher, Steam
+- links `omarchy/screen/` (jm-screen, mercury-screen) into ~/.local/bin, applications and user systemd
 - links `hypr/bindings.lua`, the LazyVim config and `AGENTS.md` (`~/AGENTS.md`, `~/.gemini/config`, `~/.codex`; uses `pkexec --disable-internal-agent`), and sources `bash/aliases.sh`
 - enables `sshd` and opens port 22 on `tailscale0` through Omarchy's default-deny `ufw` (SSH mesh)
 - installs the Mullvad+Tailscale nftables bypass

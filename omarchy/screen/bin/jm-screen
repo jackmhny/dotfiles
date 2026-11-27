@@ -1,0 +1,160 @@
+#!/usr/bin/python3
+"""Open JM's existing Voxl desktop stream in a Chrome app window."""
+
+from fcntl import LOCK_EX, flock
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import os
+from pathlib import Path
+import re
+import secrets
+from shutil import which
+import ssl
+import subprocess
+from time import monotonic, sleep
+from urllib.parse import urlencode
+
+from websockets.exceptions import InvalidStatus, WebSocketException
+from websockets.sync.client import connect
+
+VIEWER = "https://100.64.0.12:6901/"
+STREAM = "wss://100.64.0.12:6901/ws"
+PREPARE_REMOTE = """\
+set -eu
+session=$(systemctl --user show-environment)
+DISPLAY=$(printf '%s\n' "$session" | sed -n 's/^DISPLAY=//p')
+XAUTHORITY=$(printf '%s\n' "$session" | sed -n 's/^XAUTHORITY=//p')
+export DISPLAY XAUTHORITY
+[ -n "$DISPLAY" ] && [ -r "$XAUTHORITY" ] || exit 20
+display_state=$(xset q) || exit 20
+xset s reset || exit 20
+case "$display_state" in
+    *'DPMS is Enabled'*)
+        case "$display_state" in
+            *'Monitor is On'*) ;;
+            *) xset dpms force on || exit 20; sleep 2 ;;
+        esac
+        ;;
+esac
+systemctl --user start voxl.service || exit 21
+sed -n 's/^VOXL_PASSWORD=//p' "$HOME/.config/voxl/server.env" || exit 22
+"""
+
+
+def ssh(command, script=None):
+    try:
+        result = subprocess.run(
+            ["/usr/bin/ssh", "-T", "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=yes",
+             "-o", "ConnectTimeout=5", "mesh-jm", command],
+            input=script, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            text=True, timeout=20,
+        )
+    except subprocess.TimeoutExpired:
+        raise RuntimeError("JM took too long to prepare the screen stream.") from None
+    if result.returncode:
+        errors = {
+            20: "Could not wake JM's X11 display. Check that its desktop session is running.",
+            21: "Could not start Voxl on JM.",
+            22: "Could not read JM's Voxl password.",
+            255: "Could not connect to JM over SSH.",
+        }
+        raise RuntimeError(errors.get(result.returncode, "Could not restart Voxl on JM."))
+    return result.stdout.strip()
+
+
+def receives_video(password):
+    try:
+        with connect(
+            STREAM, additional_headers={"Authorization": "Bearer " + password},
+            ssl=ssl.create_default_context(), proxy=None, open_timeout=4, close_timeout=0.3,
+        ) as stream:
+            stream.send("v,1")
+            deadline = monotonic() + 5
+            while (remaining := deadline - monotonic()) > 0:
+                packet = stream.recv(timeout=remaining)
+                if isinstance(packet, bytes) and len(packet) > 6 and packet[0] == 1 and packet[1] & 1:
+                    return True
+    except ssl.SSLError:
+        raise RuntimeError("Could not verify JM's Voxl HTTPS certificate.") from None
+    except InvalidStatus as error:
+        if error.response.status_code == 401:
+            raise RuntimeError("JM rejected its Voxl password.") from None
+        return False
+    except (OSError, WebSocketException):
+        return False
+    return False
+
+
+def ready_password():
+    password = ssh("/bin/sh -s", PREPARE_REMOTE)
+    if not re.fullmatch(r"[!-~]+", password):
+        raise RuntimeError("JM returned an invalid Voxl password.")
+    if receives_video(password):
+        return password
+
+    ssh("systemctl --user restart voxl.service")
+    for delay in (0.5, 1, 2):
+        sleep(delay)
+        if receives_video(password):
+            return password
+    raise RuntimeError("Voxl restarted on JM but did not deliver a video frame.")
+
+
+def open_viewer(browser, password):
+    launch_path = "/jm-screen-" + secrets.token_urlsafe(24)
+    opened = False
+
+    class LaunchRequest(BaseHTTPRequestHandler):
+        timeout = 2
+
+        def log_message(self, *_args):
+            pass
+
+        def do_GET(self):
+            nonlocal opened
+            if opened or self.path != launch_path:
+                self.send_error(404)
+                return
+
+            self.send_response(302)
+            self.send_header("Location", VIEWER + "?" + urlencode({"token": password}))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Referrer-Policy", "no-referrer")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            opened = True
+
+    # Voxl expects the token in its URL. Keep it out of browser history and command-line arguments.
+    with HTTPServer(("127.0.0.1", 0), LaunchRequest) as server:
+        server.timeout = 0.5
+        url = f"http://127.0.0.1:{server.server_port}{launch_path}"
+        subprocess.Popen(
+            [browser, "--incognito", "--app=" + url],
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        deadline = monotonic() + 15
+        while not opened and monotonic() < deadline:
+            server.handle_request()
+    if not opened:
+        raise RuntimeError("Chrome did not open the JM Screen viewer.")
+
+
+def launch():
+    browser = which("google-chrome") or which("chromium")
+    if not browser:
+        raise RuntimeError("JM Screen needs Chrome or Chromium to open the viewer.")
+    runtime_dir = Path(os.environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}")
+    with (runtime_dir / "jm-screen.lock").open("a") as lock:
+        flock(lock, LOCK_EX)
+        password = ready_password()
+    open_viewer(browser, password)
+
+
+if __name__ == "__main__":
+    try:
+        launch()
+    except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+        message = str(error) if isinstance(error, RuntimeError) else "Could not open JM Screen."
+        if notifier := which("notify-send"):
+            subprocess.run([notifier, "JM Screen", message], check=False)
+        raise SystemExit(message) from None

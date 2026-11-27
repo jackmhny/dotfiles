@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=JM Screen
+Comment=Open JM's desktop stream
+Exec="/home/jackmhny/.local/bin/jm-screen"
+Icon=video-display
+Terminal=false
+Categories=Network;RemoteAccess;
