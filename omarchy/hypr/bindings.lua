@@ -35,8 +35,3 @@ o.bind("SUPER + SHIFT + L", "Swap window to the right", hl.dsp.window.swap({ dir
 -- ---------------------------------------------------------------------------
 o.rebind("SUPER + SHIFT + A", "Antigravity", { launch = "antigravity", focus = "^[Aa]ntigravity$" })
 o.rebind("SUPER + SHIFT + ALT + A", "Codex", { tui = "codex" })
-
--- Note on Hex voice dictation:
--- Omarchy's default/hypr/bindings/dictation.lua only binds ALT + SPACE if an
--- Omarchy dictation backend is installed. Leave Omarchy's dictation uninstalled
--- so Hex owns ALT + SPACE cleanly.

@@ -68,25 +68,20 @@ if [[ "$SKIP_PACKAGES" == "false" ]]; then
   for pkg in deskflow virt-manager qemu-desktop libvirt dnsmasq edk2-ovmf \
       cmake gdb ninja shellcheck strace lsof wget bind nmap jdk-openjdk pandoc-cli \
       texlive-basic texlive-latex texlive-latexrecommended texlive-latexextra \
-      qbittorrent zathura zathura-pdf-mupdf torbrowser-launcher prismlauncher; do
+      qbittorrent torbrowser-launcher prismlauncher; do
     sudo pacman -S --needed --noconfirm "$pkg" || echo "  [warn] pacman install failed for $pkg"
   done
-  sudo pacman -S --needed --noconfirm steam || echo "  [warn] steam failed (enable [multilib] or run omarchy-install-gaming-steam)"
-  command -v omarchy-install-gaming-gpu-lib32 >/dev/null 2>&1 && { omarchy-install-gaming-gpu-lib32 || true; }
   sudo systemctl enable --now libvirtd.service || true
   sudo usermod -aG libvirt "$USER" || true
 
   if [[ -n "$AUR_HELPER" ]]; then
     # Install each AUR package separately so one hiccup never blocks the rest.
-    for pkg in google-chrome mullvad-vpn-bin antigravity antigravity-cli hex-bin zoom; do
+    for pkg in google-chrome mullvad-vpn-bin antigravity antigravity-cli zoom; do
       "$AUR_HELPER" -S --needed --noconfirm "$pkg" \
         || echo "  [warn] AUR install failed for $pkg (retry later: $AUR_HELPER -S $pkg)"
     done
-    if ! command -v hex >/dev/null 2>&1; then
-      echo "  [note] hex not found; fallback: curl -fsSL https://anoma.ly/hex/install-linux.sh | sh"
-    fi
   else
-    echo "  [note] No AUR helper (yay/paru) found; install: google-chrome mullvad-vpn-bin antigravity antigravity-cli hex-bin"
+    echo "  [note] No AUR helper (yay/paru) found; install: google-chrome mullvad-vpn-bin antigravity antigravity-cli zoom"
   fi
 
   # Codex CLI (via npm/mise if node is present)
@@ -171,11 +166,6 @@ touch "$HOME/.codex/config.toml"
 if ! grep -Fq "[mcp_servers.1password]" "$HOME/.codex/config.toml"; then
   printf '\n[mcp_servers.1password]\ncommand = "/opt/1Password/1password-mcp"\nargs = []\n' >> "$HOME/.codex/config.toml"
 fi
-# A legacy standalone op config keeps `op` in standalone mode instead of the desktop app
-if [[ -f "$HOME/.config/op/config" ]]; then
-  mv "$HOME/.config/op/config" "$HOME/.config/op/config.bak"
-  echo "  moved legacy ~/.config/op/config aside"
-fi
 
 # 3. Install Mullvad + Tailscale nftables bypass rule
 log "Installing Mullvad + Tailscale nftables bypass"
@@ -249,13 +239,6 @@ if [[ -n "$SECRETS_ARCHIVE" ]]; then
     echo "  restored ~/.ssh"
   fi
 
-  # Hex settings
-  if [[ -f "$STAGE/hex/settings.json" ]]; then
-    mkdir -p "$HOME/.local/share/hex"
-    install -m 600 "$STAGE/hex/settings.json" "$HOME/.local/share/hex/settings.json"
-    echo "  restored ~/.local/share/hex/settings.json"
-  fi
-
   # NetworkManager Wi-Fi profiles
   if [[ -d "$STAGE/nm-connections" ]]; then
     sudo install -d -m 700 /etc/NetworkManager/system-connections
@@ -305,10 +288,9 @@ log "Bootstrap complete!"
 cat <<'NEXT'
 Remaining interactive steps:
   1. Run: omarchy-setup-security-fingerprint  (Goodix -> sudo, polkit/pkexec, hyprlock)
-  2. Sign into 1Password (Super+Shift+/) -> Settings -> Developer -> enable ALL of:
+  2. Sign into 1Password (Super+Shift+/) -> Settings -> Developer -> enable:
        SSH Agent (+ Git commit signing; paste pubkey into ~/.config/git/config signingkey),
        Integrate with 1Password CLI, MCP integration, SDK integration.
-     (If `op` ran before toggling: rm -f /run/user/$UID/op-daemon.* and restart 1Password.)
   3. Verify Tailscale auto-reconnected as 100.64.0.9: tailscale status
      (fallback only if not connected: sudo tailscale up --login-server=https://headscale.jackmhny.xyz)
   4. Run: gh auth login
@@ -316,7 +298,7 @@ Remaining interactive steps:
        ~/dotfiles/omarchy/restore-antigravity-chats.sh --stop
      Then launch Antigravity (Super+Shift+A / antigravity / agy), sign in, reinstall + sign into
      the Google Workspace and Notion plugins (optionally Chrome DevTools), paste the handoff prompt.
-  6. Sign into Chrome (Super+Shift+B). Test binds: Super+H/J/K/L, Super+Ctrl+/, Super+Shift+A, Alt+Space.
+  6. Sign into Chrome (Super+Shift+B). Test binds: Super+H/J/K/L, Super+Ctrl+/, Super+Shift+A.
   7. Add Debian to Limine: sudo limine-scan (or add the chainload block to /boot/limine.conf).
-     UEFI BootOrder is already 0004 (Omarchy), 0001 (Debian); revert: sudo efibootmgr -o 0001,0004
+     Promote Omarchy to default when ready: sudo efibootmgr -o 0001,0000
 NEXT
