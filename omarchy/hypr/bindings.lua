@@ -59,6 +59,16 @@ o.bind("SUPER + ALT + J", "Move window to group on bottom", hl.dsp.window.move({
 o.rebind("SUPER + ALT + K", "Move window to group on top", hl.dsp.window.move({ into_group = "u" }))
 o.bind("SUPER + ALT + L", "Move window to group on right", hl.dsp.window.move({ into_group = "r" }))
 
+o.bind("SUPER + SHIFT + ALT + H", "Move workspace to left monitor", o.workspaces.move_to_monitor("l"))
+o.bind("SUPER + SHIFT + ALT + J", "Move workspace to down monitor", o.workspaces.move_to_monitor("d"))
+o.bind("SUPER + SHIFT + ALT + K", "Move workspace to up monitor", o.workspaces.move_to_monitor("u"))
+o.bind("SUPER + SHIFT + ALT + L", "Move workspace to right monitor", o.workspaces.move_to_monitor("r"))
+
+o.bind("SUPER + SHIFT + CTRL + H", "Move window to left monitor", o.workspaces.move_window_to_monitor("l"))
+o.bind("SUPER + SHIFT + CTRL + J", "Move window to down monitor", o.workspaces.move_window_to_monitor("d"))
+o.bind("SUPER + SHIFT + CTRL + K", "Move window to up monitor", o.workspaces.move_window_to_monitor("u"))
+o.bind("SUPER + SHIFT + CTRL + L", "Move window to right monitor", o.workspaces.move_window_to_monitor("r"))
+
 -- ---------------------------------------------------------------------------
 -- 3. AI / Agent apps on Omarchy's AI plane (replaces stock ChatGPT / Grok webapps)
 --    Stock SUPER + SHIFT + CTRL + A remains `omarchy-agent --pick`.
