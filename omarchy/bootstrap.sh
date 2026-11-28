@@ -116,14 +116,18 @@ log "Linking Hyprland bindings.lua, input repeat-rate, and LazyVim config"
 link_with_backup "$DOTFILES_DIR/omarchy/hypr/bindings.lua" "$HOME/.config/hypr/bindings.lua"
 link_with_backup "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 if [[ -f "$HOME/.config/hypr/input.lua" ]]; then
-  python3 - "$HOME/.config/hypr/input.lua" <<'PY'
-import pathlib, re, sys
-p = pathlib.Path(sys.argv[1])
-txt = p.read_text()
-txt = re.sub(r'^\s*(--\s*)?repeat_rate\s*=\s*\d+,?', '    repeat_rate = 25,', txt, flags=re.M)
-txt = re.sub(r'^\s*(--\s*)?repeat_delay\s*=\s*\d+,?', '    repeat_delay = 660,', txt, flags=re.M)
-p.write_text(txt)
-PY
+  if ! grep -Fq "jack-repeat-rate" "$HOME/.config/hypr/input.lua"; then
+    cat >> "$HOME/.config/hypr/input.lua" <<'EOF'
+
+-- jack-repeat-rate: stock X11 keyboard repeat defaults (xset -q)
+hl.config({
+  input = {
+    repeat_rate = 25,
+    repeat_delay = 660,
+  },
+})
+EOF
+  fi
   echo "  configured Hyprland input.lua repeat_rate=25, repeat_delay=660"
 fi
 hyprctl reload >/dev/null 2>&1 || true
@@ -138,18 +142,6 @@ if ! grep -Fq "omarchy/bash/aliases.sh" "$HOME/.bashrc" 2>/dev/null; then
   printf '\n# Jack personal aliases\n[ -f "%s/omarchy/bash/aliases.sh" ] && source "%s/omarchy/bash/aliases.sh"\n' \
     "$DOTFILES_DIR" "$DOTFILES_DIR" >> "$HOME/.bashrc"
 fi
-
-# 2d. jm-screen / mercury-screen
-log "Linking jm-screen and mercury-screen"
-SCR="$DOTFILES_DIR/omarchy/screen"
-link_with_backup "$SCR/bin/jm-screen" "$HOME/.local/bin/jm-screen"
-link_with_backup "$SCR/bin/mercury-screen" "$HOME/.local/bin/mercury-screen"
-link_with_backup "$SCR/applications/jm-screen.desktop" "$HOME/.local/share/applications/jm-screen.desktop"
-link_with_backup "$SCR/applications/mercury-screen.desktop" "$HOME/.local/share/applications/mercury-screen.desktop"
-link_with_backup "$SCR/systemd/mercury-screen.service" "$HOME/.config/systemd/user/mercury-screen.service"
-link_with_backup "$SCR/systemd/mercury-screen.socket" "$HOME/.config/systemd/user/mercury-screen.socket"
-link_with_backup "$SCR/config/connection.ini" "$HOME/.config/mercury-screen/connection.ini"
-systemctl --user daemon-reload >/dev/null 2>&1 || true
 
 # 2c. 1Password MCP + CLI smoothing
 log "Configuring 1Password MCP & CLI integration"
